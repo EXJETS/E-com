@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Star, ShoppingBag } from "lucide-react";
+import { Star, ShoppingBag, Heart } from "lucide-react";
 import { Product } from "@/lib/products";
 import { useCart } from "@/lib/cart";
 import { useState } from "react";
@@ -10,6 +10,7 @@ import { useState } from "react";
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
   const [adding, setAdding] = useState(false);
+  const [wishlisted, setWishlisted] = useState(false);
 
   const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
 
@@ -50,9 +51,17 @@ export default function ProductCard({ product }: { product: Product }) {
             </span>
           )}
         </div>
-        <span className="absolute top-3 right-3 bg-[var(--accent)] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-          -{discount}%
-        </span>
+
+        {/* Wishlist heart */}
+        <button
+          onClick={(e) => { e.preventDefault(); setWishlisted((w) => !w); }}
+          aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm shadow-sm flex items-center justify-center hover:scale-110 transition-transform"
+        >
+          <Heart
+            className={`w-4 h-4 ${wishlisted ? "fill-red-500 text-red-500" : "text-stone-400"}`}
+          />
+        </button>
       </Link>
 
       {/* ── Details ── */}

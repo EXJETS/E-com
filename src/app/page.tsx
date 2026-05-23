@@ -247,7 +247,7 @@ export default function HomePage() {
               {[
                 { number: "200K+", label: "Happy customers" },
                 { number: "4.8★", label: "Average rating" },
-                { number: "27", label: "Curated products" },
+                { number: "31", label: "Curated products" },
                 { number: "60%", label: "Avg. discount off retail" },
               ].map((s) => (
                 <div key={s.label} className="border-l-2 border-[var(--accent)] pl-4">

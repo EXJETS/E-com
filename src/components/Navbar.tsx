@@ -3,15 +3,17 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/lib/cart";
-import { ShoppingBag, Search, Menu, X, Gem, ArrowRight } from "lucide-react";
+import { ShoppingBag, Search, Menu, X, Gem, ArrowRight, Home, Layers, Package } from "lucide-react";
 import { useState, useEffect } from "react";
 import { collections, getBestSellers } from "@/lib/products";
+import SearchModal from "@/components/SearchModal";
 
 export default function Navbar() {
   const { totalItems, toggleCart } = useCart();
   const [scrolled, setScrolled]   = useState(false);
   const [menuOpen, setMenuOpen]   = useState(false);
   const [megaOpen, setMegaOpen]   = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const featured = getBestSellers(2);
 
@@ -131,8 +133,12 @@ export default function Navbar() {
 
           {/* Right icons */}
           <div className="flex items-center gap-1">
-            <button className="icon-btn hidden sm:flex" aria-label="Search">
-              <Search className="w-4.5 h-4.5 w-[18px] h-[18px]" />
+            <button
+              className="icon-btn hidden sm:flex"
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
+            >
+              <Search className="w-[18px] h-[18px]" />
             </button>
             <button onClick={toggleCart} className="icon-btn relative" aria-label="Open bag">
               <ShoppingBag className="w-[18px] h-[18px]" />
@@ -151,50 +157,101 @@ export default function Navbar() {
             </button>
           </div>
         </nav>
-
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div className="md:hidden border-t border-[var(--border)] bg-white animate-fade-up">
-            <div className="px-6 py-5 flex flex-col gap-4">
-              <Link href="/" className="text-sm font-medium text-[var(--charcoal)]" onClick={() => setMenuOpen(false)}>
-                Home
-              </Link>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted)]">Collections</p>
-              {collections.map((c) => (
-                <Link
-                  key={c.id}
-                  href={`/collections/${c.id}`}
-                  className="text-sm text-[var(--body)] pl-3 border-l-2 border-[var(--border)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {c.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
       </header>
 
-      <style jsx>{`
-        .nav-link {
-          font-size: 13px;
-          font-weight: 500;
-          color: var(--body);
-          letter-spacing: 0.01em;
-          transition: color 0.15s;
-        }
-        .nav-link:hover { color: var(--accent); }
-        .icon-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 36px; height: 36px;
-          border-radius: 50%;
-          color: var(--body);
-          transition: background 0.15s, color 0.15s;
-        }
-        .icon-btn:hover { background: var(--sand); color: var(--accent); }
-      `}</style>
+      {/* Mobile menu — full-screen slide-in panel */}
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 z-[55] bg-[var(--charcoal)]/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
+          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setMenuOpen(false)}
+      />
+
+      {/* Slide panel */}
+      <div
+        className={`fixed right-0 top-0 h-full w-[280px] bg-white shadow-2xl z-[55] flex flex-col transition-transform duration-300 md:hidden ${
+          menuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        {/* Panel header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)]">
+          <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+            <Gem className="w-4 h-4 text-[var(--accent)]" />
+            <span className="font-display text-[17px] font-semibold tracking-tight text-[var(--charcoal)]">
+              Glow<span className="text-[var(--accent)]">Cart</span>
+            </span>
+          </Link>
+          <button
+            onClick={() => setMenuOpen(false)}
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[var(--sand)] text-[var(--muted)] hover:text-[var(--charcoal)] transition-colors"
+            aria-label="Close menu"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Panel body */}
+        <div className="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-1">
+          {/* Nav links */}
+          <Link
+            href="/"
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-[var(--sand)] text-sm font-medium text-[var(--charcoal)] hover:text-[var(--accent)] transition-colors"
+          >
+            <Home className="w-4 h-4 text-[var(--muted)]" />
+            Home
+          </Link>
+          <Link
+            href="/collections/facial-devices"
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-[var(--sand)] text-sm font-medium text-[var(--charcoal)] hover:text-[var(--accent)] transition-colors"
+          >
+            <Layers className="w-4 h-4 text-[var(--muted)]" />
+            Devices
+          </Link>
+          <Link
+            href="/collections/hygiene-kits"
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-[var(--sand)] text-sm font-medium text-[var(--charcoal)] hover:text-[var(--accent)] transition-colors"
+          >
+            <Package className="w-4 h-4 text-[var(--muted)]" />
+            Care Packages
+          </Link>
+
+          {/* Collections list */}
+          <div className="mt-4 pt-4 border-t border-[var(--border)]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted)] px-3 mb-2">
+              Collections
+            </p>
+            {collections.map((c) => (
+              <Link
+                key={c.id}
+                href={`/collections/${c.id}`}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[var(--sand)] text-sm text-[var(--body)] hover:text-[var(--accent)] transition-colors"
+              >
+                <span>{c.name}</span>
+                <span className="text-xs text-[var(--muted)]">{c.productCount}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Shop All CTA */}
+        <div className="px-5 py-4 border-t border-[var(--border)]">
+          <Link
+            href="/collections/best-sellers"
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center justify-center gap-2 w-full bg-[var(--charcoal)] hover:bg-[var(--accent)] text-white rounded-full py-3 text-sm font-semibold tracking-wide transition-all duration-300"
+          >
+            Shop All <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Search Modal */}
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

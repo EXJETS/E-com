@@ -4,30 +4,39 @@ import { useCart } from "@/lib/cart";
 import { X, ShoppingBag, Trash2, Plus, Minus, ArrowRight, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getBestSellers } from "@/lib/products";
 
 export default function CartDrawer() {
-  const { items, isOpen, closeCart, removeItem, updateQty, totalPrice, totalItems } = useCart();
-
-  if (!isOpen) return null;
+  const { items, isOpen, closeCart, removeItem, updateQty, addItem, totalPrice, totalItems } = useCart();
 
   const shipping = totalPrice >= 50 ? 0 : 5.99;
   const progressPct = Math.min((totalPrice / 50) * 100, 100);
+
+  const suggestions = getBestSellers(6).filter(
+    (p) => !items.find((i) => i.product.id === p.id)
+  ).slice(0, 2);
 
   return (
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[var(--charcoal)]/50 z-50 backdrop-blur-sm transition-opacity"
+        className={`fixed inset-0 bg-[var(--charcoal)]/50 z-50 backdrop-blur-sm transition-opacity duration-300 ${
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
         onClick={closeCart}
       />
 
       {/* Drawer */}
-      <aside className="fixed right-0 top-0 h-full w-full max-w-[400px] bg-[var(--cream)] z-50 flex flex-col shadow-2xl border-l border-[var(--border)]">
+      <aside
+        className={`fixed right-0 top-0 h-full w-full max-w-[400px] bg-[var(--cream)] z-50 flex flex-col shadow-2xl border-l border-[var(--border)] transition-transform duration-300 ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--border)]">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="w-4.5 h-4.5 w-[18px] h-[18px] text-[var(--accent)]" />
+            <ShoppingBag className="w-[18px] h-[18px] text-[var(--accent)]" />
             <span className="font-semibold text-[var(--charcoal)] text-sm tracking-wide">
               Your Bag {totalItems > 0 && <span className="text-[var(--muted)]">({totalItems})</span>}
             </span>
@@ -135,6 +144,45 @@ export default function CartDrawer() {
                   </div>
                 </div>
               ))}
+
+              {/* Upsell: You May Also Like */}
+              {suggestions.length > 0 && (
+                <div className="pt-5 border-t border-[var(--border)]">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted)] mb-3">
+                    You May Also Like
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    {suggestions.map((p) => (
+                      <div key={p.id} className="flex items-center gap-3">
+                        <Link
+                          href={`/products/${p.slug}`}
+                          onClick={closeCart}
+                          className="relative w-14 h-14 rounded-xl overflow-hidden bg-[var(--sand)] flex-shrink-0"
+                        >
+                          <Image
+                            src={p.image}
+                            alt={p.name}
+                            fill
+                            className="object-cover"
+                            sizes="56px"
+                          />
+                        </Link>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium text-[var(--charcoal)] line-clamp-1">{p.name}</p>
+                          <p className="text-xs text-[var(--accent)] font-bold mt-0.5">${p.price.toFixed(2)}</p>
+                        </div>
+                        <button
+                          onClick={() => addItem(p)}
+                          className="w-7 h-7 rounded-full border border-[var(--border)] flex items-center justify-center hover:bg-[var(--accent)] hover:border-[var(--accent)] hover:text-white text-[var(--muted)] transition-colors flex-shrink-0"
+                          aria-label={`Add ${p.name} to bag`}
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
