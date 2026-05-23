@@ -13,6 +13,7 @@ export default function HomePage() {
     "30-Day Money-Back Guarantee",
     "Free Shipping Over $50",
     "4.8 / 5 Stars",
+    "US Warehouse — Ships in 5–7 Days",
     "Cruelty-Free Formulas",
     "Clinic-Grade Technology",
     "Award-Winning Products",
@@ -247,7 +248,7 @@ export default function HomePage() {
               {[
                 { number: "200K+", label: "Happy customers" },
                 { number: "4.8★", label: "Average rating" },
-                { number: "31", label: "Curated products" },
+                { number: "36", label: "Curated products" },
                 { number: "60%", label: "Avg. discount off retail" },
               ].map((s) => (
                 <div key={s.label} className="border-l-2 border-[var(--accent)] pl-4">

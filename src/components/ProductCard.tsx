@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Star, ShoppingBag, Heart } from "lucide-react";
+import { Star, ShoppingBag, Heart, Truck } from "lucide-react";
 import { Product } from "@/lib/products";
 import { useCart } from "@/lib/cart";
 import { useState } from "react";
@@ -11,8 +11,6 @@ export default function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
   const [adding, setAdding] = useState(false);
   const [wishlisted, setWishlisted] = useState(false);
-
-  const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -48,6 +46,11 @@ export default function ProductCard({ product }: { product: Product }) {
           {product.badge && (
             <span className="bg-[var(--charcoal)] text-white text-[10px] font-semibold px-2.5 py-1 rounded-full tracking-wide">
               {product.badge}
+            </span>
+          )}
+          {product.shipsFrom === "US" && (
+            <span className="bg-emerald-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full tracking-wide">
+              🇺🇸 US Stock
             </span>
           )}
         </div>
@@ -98,6 +101,12 @@ export default function ProductCard({ product }: { product: Product }) {
             <span className="text-sm font-bold text-[var(--charcoal)]">${product.price.toFixed(2)}</span>
             <span className="text-xs text-[var(--muted)] line-through">${product.originalPrice.toFixed(2)}</span>
           </div>
+        </div>
+
+        {/* Shipping speed */}
+        <div className={`flex items-center gap-1 mt-1 ${product.shipsFrom === "US" ? "text-emerald-600" : "text-[var(--muted)]"}`}>
+          <Truck className="w-3 h-3 flex-shrink-0" />
+          <span className="text-[10px] font-medium">Ships in {product.deliveryDays} business days</span>
         </div>
       </div>
     </div>

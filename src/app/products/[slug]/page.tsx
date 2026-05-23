@@ -134,8 +134,25 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <ProductActions product={product} />
           </div>
 
+          {/* Delivery info */}
+          <div className={`mt-6 rounded-2xl border p-4 flex items-start gap-3 ${product.shipsFrom === "US" ? "bg-emerald-50 border-emerald-200" : "bg-[var(--sand)] border-[var(--border)]"}`}>
+            <Truck className={`w-4 h-4 flex-shrink-0 mt-0.5 ${product.shipsFrom === "US" ? "text-emerald-600" : "text-[var(--accent)]"}`} />
+            <div>
+              <p className={`text-xs font-bold ${product.shipsFrom === "US" ? "text-emerald-700" : "text-[var(--charcoal)]"}`}>
+                {product.shipsFrom === "US" ? "🇺🇸 Ships from US Warehouse" : "Ships from Overseas Warehouse"}
+              </p>
+              <p className="text-xs text-[var(--body)] mt-0.5">
+                Estimated delivery: <span className="font-semibold">{product.deliveryDays} business days</span>
+                {" "}· Fulfilled by <span className="font-medium">{product.supplier}</span>
+              </p>
+              <p className="text-[11px] text-[var(--muted)] mt-1">
+                Tracking number provided within 24–48hrs of dispatch
+              </p>
+            </div>
+          </div>
+
           {/* Trust bar */}
-          <div className="mt-6 grid grid-cols-3 gap-3">
+          <div className="mt-4 grid grid-cols-3 gap-3">
             {[
               { icon: Truck,      label: "Free Shipping",  sub: "Orders $50+" },
               { icon: RotateCcw,  label: "30-Day Returns", sub: "Hassle-free" },
