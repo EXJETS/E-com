@@ -26,11 +26,18 @@ export interface Collection {
 
 export const collections: Collection[] = [
   {
+    id: "best-sellers",
+    name: "Best Sellers",
+    description: "Our most-loved products — chosen by thousands of happy customers",
+    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80",
+    productCount: 12,
+  },
+  {
     id: "facial-devices",
     name: "Facial Devices",
     description: "Clinic-quality skin treatments at home",
     image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80",
-    productCount: 6,
+    productCount: 9,
   },
   {
     id: "body-care",
@@ -58,7 +65,7 @@ export const collections: Collection[] = [
     name: "Hygiene Care Packages",
     description: "Complete self-care bundles for daily routines",
     image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&q=80",
-    productCount: 5,
+    productCount: 6,
   },
   {
     id: "nail-care",
@@ -654,6 +661,104 @@ export const products: Product[] = [
     inStock: true,
   },
 
+  // ── New High-Converters ───────────────────────────────────────────────
+  {
+    id: "28",
+    slug: "red-light-therapy-wand",
+    name: "Red Light Therapy Wand — Anti-Aging",
+    price: 39.99,
+    originalPrice: 94.99,
+    category: "Red Light Therapy",
+    collection: "facial-devices",
+    rating: 4.8,
+    reviews: 14821,
+    sold: 67000,
+    description:
+      "Handheld 630nm + 850nm dual-wavelength red light therapy wand reduces fine lines, boosts collagen, and fades dark spots in 10-minute daily sessions.",
+    features: [
+      "630nm + 850nm dual wavelength",
+      "Collagen-stimulating technology",
+      "Fades dark spots & fine lines",
+      "10-minute daily sessions",
+      "USB-C rechargeable",
+    ],
+    image: "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=600&q=80",
+    badge: "Trending",
+    inStock: true,
+  },
+  {
+    id: "29",
+    slug: "blackhead-vacuum-camera",
+    name: "Blackhead Remover Vacuum with HD Camera",
+    price: 32.99,
+    originalPrice: 74.99,
+    category: "Deep Cleansing",
+    collection: "facial-devices",
+    rating: 4.7,
+    reviews: 22134,
+    sold: 103000,
+    description:
+      "5-megapixel HD camera shows your pores live on your phone while 3-level suction safely extracts blackheads, whiteheads, and sebum plugs. 5 suction heads.",
+    features: [
+      "5MP HD pore camera",
+      "WiFi app-connected",
+      "3 suction strength levels",
+      "5 interchangeable heads",
+      "Safe for sensitive skin",
+    ],
+    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&q=80",
+    badge: "Best Seller",
+    inStock: true,
+  },
+  {
+    id: "30",
+    slug: "silicone-facial-cleansing-brush",
+    name: "Sonic Silicone Facial Cleansing Brush",
+    price: 13.99,
+    originalPrice: 29.99,
+    category: "Face Cleansing",
+    collection: "facial-devices",
+    rating: 4.9,
+    reviews: 38902,
+    sold: 178000,
+    description:
+      "7,000 micro-vibrations per minute remove makeup, oil, and dirt 10× better than hands. Ultra-soft medical-grade silicone — safe for all skin types. Waterproof.",
+    features: [
+      "7,000 vibrations/min",
+      "Medical-grade silicone",
+      "100% waterproof",
+      "USB rechargeable",
+      "Works with any cleanser",
+    ],
+    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80",
+    badge: "#1 Seller",
+    inStock: true,
+  },
+  {
+    id: "31",
+    slug: "blue-light-blocking-glasses-set",
+    name: "Blue Light Blocking Glasses — 3-Pack",
+    price: 19.99,
+    originalPrice: 44.99,
+    category: "Eye Wellness",
+    collection: "hygiene-kits",
+    rating: 4.8,
+    reviews: 29841,
+    sold: 138000,
+    description:
+      "Block 99% of blue light from screens to reduce eye strain, improve sleep quality, and prevent digital headaches. Anti-glare + UV400 coating. 3 styles included.",
+    features: [
+      "99% blue light blocking",
+      "Anti-glare UV400 coating",
+      "3 frame styles",
+      "Reduces eye strain",
+      "Improves sleep quality",
+    ],
+    image: "https://images.unsplash.com/photo-1483706571191-85c0c76b1947?w=600&q=80",
+    badge: "Best Seller",
+    inStock: true,
+  },
+
   // ── Nail Care ─────────────────────────────────────────────────────────
   {
     id: "25",
@@ -730,6 +835,7 @@ export const products: Product[] = [
 ];
 
 export function getProductsByCollection(collectionId: string): Product[] {
+  if (collectionId === "best-sellers") return getBestSellers(12);
   return products.filter((p) => p.collection === collectionId);
 }
 

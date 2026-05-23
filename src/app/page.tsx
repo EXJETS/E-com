@@ -5,7 +5,7 @@ import { getBestSellers, collections } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 
 export default function HomePage() {
-  const bestSellers = getBestSellers(8);
+  const bestSellers = getBestSellers(12);
 
   const marqueeItems = [
     "Dermatologist Tested",
@@ -151,12 +151,12 @@ export default function HomePage() {
             <p className="section-label">Browse By Category</p>
             <h2 className="section-heading">Our Collections</h2>
           </div>
-          <Link href="/collections/facial-devices" className="text-sm text-[var(--muted)] hover:text-[var(--accent)] transition-colors flex items-center gap-1.5 font-medium">
-            View all <ChevronRight className="w-4 h-4" />
+          <Link href="/collections/best-sellers" className="text-sm text-[var(--muted)] hover:text-[var(--accent)] transition-colors flex items-center gap-1.5 font-medium">
+            View all collections <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
-        {/* Asymmetric grid: first card double-wide */}
+        {/* Asymmetric grid: Best Sellers (index 0) is the hero card */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[220px] md:auto-rows-[260px]">
           {collections.map((c, i) => (
             <Link
@@ -172,6 +172,13 @@ export default function HomePage() {
                 sizes="(max-width: 768px) 50vw, 33vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[var(--charcoal)]/85 via-[var(--charcoal)]/20 to-transparent" />
+              {i === 0 && (
+                <div className="absolute top-4 left-4">
+                  <span className="bg-[var(--accent)] text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest">
+                    Most Popular
+                  </span>
+                </div>
+              )}
               <div className="absolute bottom-0 left-0 right-0 p-5">
                 <p className="text-white font-semibold text-sm tracking-wide">{c.name}</p>
                 <div className="flex items-center gap-1 mt-1 text-stone-300 group-hover:text-rose-300 transition-colors text-xs">
@@ -192,8 +199,8 @@ export default function HomePage() {
               <p className="section-label">Most Loved</p>
               <h2 className="section-heading">Best Sellers</h2>
             </div>
-            <Link href="/collections/hygiene-kits" className="text-sm text-[var(--muted)] hover:text-[var(--accent)] transition-colors flex items-center gap-1.5 font-medium">
-              View all <ChevronRight className="w-4 h-4" />
+            <Link href="/collections/best-sellers" className="text-sm text-[var(--muted)] hover:text-[var(--accent)] transition-colors flex items-center gap-1.5 font-medium">
+              View all best sellers <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-10">
