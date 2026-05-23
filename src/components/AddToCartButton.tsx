@@ -7,33 +7,28 @@ import { useState } from "react";
 
 export default function AddToCartButton({ product }: { product: Product }) {
   const { addItem } = useCart();
-  const [added, setAdded] = useState(false);
+  const [state, setState] = useState<"idle" | "added">("idle");
 
   const handleAdd = () => {
+    if (state === "added") return;
     addItem(product);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1800);
+    setState("added");
+    setTimeout(() => setState("idle"), 2000);
   };
 
   return (
     <button
       onClick={handleAdd}
-      className={`w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl text-sm font-semibold transition-all duration-300 tracking-wide ${
-        added
+      className={`w-full flex items-center justify-center gap-2.5 py-4 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 ${
+        state === "added"
           ? "bg-emerald-600 text-white"
-          : "bg-stone-900 hover:bg-rose-500 text-white"
+          : "bg-[var(--charcoal)] hover:bg-[var(--accent)] text-white"
       }`}
     >
-      {added ? (
-        <>
-          <CheckCircle className="w-5 h-5" />
-          Added to Bag
-        </>
+      {state === "added" ? (
+        <><CheckCircle className="w-5 h-5" /> Added to Bag</>
       ) : (
-        <>
-          <ShoppingBag className="w-5 h-5" />
-          Add to Bag
-        </>
+        <><ShoppingBag className="w-5 h-5" /> Add to Bag</>
       )}
     </button>
   );
