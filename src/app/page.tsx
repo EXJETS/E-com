@@ -1,6 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Star, Zap, Shield, RefreshCw } from "lucide-react";
+import {
+  ArrowRight,
+  Star,
+  Truck,
+  RotateCcw,
+  ShieldCheck,
+  BadgeCheck,
+  ChevronRight,
+} from "lucide-react";
 import { getBestSellers, collections } from "@/lib/products";
 import ProductCard from "@/components/ProductCard";
 
@@ -8,48 +16,50 @@ export default function HomePage() {
   const bestSellers = getBestSellers(8);
 
   return (
-    <div>
+    <div className="bg-white">
       {/* ── Hero ── */}
-      <section className="relative bg-gradient-to-br from-pink-50 via-rose-50 to-fuchsia-50 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 py-20 lg:py-28 grid lg:grid-cols-2 gap-12 items-center">
+      <section className="relative overflow-hidden bg-gradient-to-br from-stone-50 via-rose-50/30 to-white">
+        <div className="max-w-7xl mx-auto px-6 py-20 lg:py-28 grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <span className="inline-flex items-center gap-1.5 bg-pink-100 text-pink-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
-              <Zap className="w-3 h-3" /> Trending in 2025
-            </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-              Glow Like a{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-500">
-                Pro
-              </span>
+            <div className="inline-flex items-center gap-2 bg-rose-50 border border-rose-100 text-rose-600 text-xs font-semibold px-4 py-2 rounded-full mb-7 tracking-widest uppercase">
+              <BadgeCheck className="w-3.5 h-3.5" />
+              Dermatologist Approved
+            </div>
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-stone-900 leading-[1.05] tracking-tight">
+              Clinic-Grade
               <br />
-              From Home
+              <span className="text-rose-500">Beauty</span>
+              <br />
+              at Home
             </h1>
-            <p className="mt-5 text-lg text-gray-500 leading-relaxed max-w-md">
-              Clinic-quality beauty devices and complete hygiene care packages — curated for real results, delivered to your door.
+            <p className="mt-6 text-lg text-stone-500 leading-relaxed max-w-md">
+              Premium beauty devices and hygiene care packages curated for visible results. Free shipping on orders over $50.
             </p>
-            <div className="flex flex-wrap gap-3 mt-8">
+            <div className="flex flex-wrap gap-3 mt-9">
               <Link
                 href="/collections/facial-devices"
-                className="inline-flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-6 py-3.5 rounded-xl font-semibold text-sm transition-colors shadow-lg shadow-pink-200"
+                className="inline-flex items-center gap-2 bg-stone-900 hover:bg-rose-500 text-white px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 tracking-wide"
               >
                 Shop Devices <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/collections/hygiene-kits"
-                className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-6 py-3.5 rounded-xl font-semibold text-sm transition-colors"
+                className="inline-flex items-center gap-2 bg-white hover:bg-stone-50 text-stone-700 border border-stone-200 px-7 py-3.5 rounded-xl font-semibold text-sm transition-colors tracking-wide"
               >
                 Care Packages
               </Link>
             </div>
-            <div className="flex items-center gap-4 mt-8">
-              <div className="flex -space-x-2">
+
+            {/* Social proof */}
+            <div className="flex items-center gap-4 mt-10 pt-8 border-t border-stone-100">
+              <div className="flex -space-x-2.5">
                 {[
                   "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=40&q=80",
-                  "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&q=80",
                   "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&q=80",
+                  "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=40&q=80",
                 ].map((src, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full border-2 border-white overflow-hidden relative">
-                    <Image src={src} alt="Customer" fill className="object-cover" sizes="32px" />
+                  <div key={i} className="w-9 h-9 rounded-full border-2 border-white overflow-hidden relative shadow-sm">
+                    <Image src={src} alt="Customer" fill className="object-cover" sizes="36px" />
                   </div>
                 ))}
               </div>
@@ -59,24 +69,26 @@ export default function HomePage() {
                     <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <p className="text-xs text-gray-500 mt-0.5">200,000+ happy customers</p>
+                <p className="text-xs text-stone-400 mt-0.5">Trusted by 200,000+ customers</p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 lg:gap-5">
+          {/* Image collage */}
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-4">
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/5] shadow-xl">
+              <div className="relative rounded-3xl overflow-hidden aspect-[4/5] shadow-2xl">
                 <Image
                   src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500&q=80"
                   alt="Facial devices"
                   fill
                   className="object-cover"
-                  sizes="250px"
+                  sizes="280px"
                   priority
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/30 to-transparent" />
               </div>
-              <div className="relative rounded-2xl overflow-hidden aspect-square shadow-md">
+              <div className="relative rounded-2xl overflow-hidden aspect-square shadow-lg">
                 <Image
                   src="https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=300&q=80"
                   alt="Oral care"
@@ -86,8 +98,8 @@ export default function HomePage() {
                 />
               </div>
             </div>
-            <div className="space-y-4 pt-8">
-              <div className="relative rounded-2xl overflow-hidden aspect-square shadow-md">
+            <div className="space-y-4 pt-10">
+              <div className="relative rounded-2xl overflow-hidden aspect-square shadow-lg">
                 <Image
                   src="https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&q=80"
                   alt="Skincare kits"
@@ -96,14 +108,15 @@ export default function HomePage() {
                   sizes="200px"
                 />
               </div>
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/5] shadow-xl">
+              <div className="relative rounded-3xl overflow-hidden aspect-[4/5] shadow-2xl">
                 <Image
                   src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=500&q=80"
                   alt="Body care"
                   fill
                   className="object-cover"
-                  sizes="250px"
+                  sizes="280px"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/30 to-transparent" />
               </div>
             </div>
           </div>
@@ -111,34 +124,36 @@ export default function HomePage() {
       </section>
 
       {/* ── Trust badges ── */}
-      <section className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-wrap justify-center gap-x-10 gap-y-3">
+      <section className="border-y border-stone-100 bg-stone-50">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-wrap justify-center gap-x-12 gap-y-3">
           {[
-            { icon: <Shield className="w-4 h-4 text-pink-500" />, text: "Dermatologist Tested" },
-            { icon: <RefreshCw className="w-4 h-4 text-pink-500" />, text: "30-Day Money Back" },
-            { icon: <Zap className="w-4 h-4 text-pink-500" />, text: "Fast 3–5 Day Shipping" },
-            { icon: <Star className="w-4 h-4 text-pink-500" />, text: "4.8/5 Average Rating" },
-          ].map((b) => (
-            <div key={b.text} className="flex items-center gap-2">
-              {b.icon}
-              <span className="text-sm text-gray-600 font-medium">{b.text}</span>
+            { icon: ShieldCheck, text: "Dermatologist Tested" },
+            { icon: RotateCcw, text: "30-Day Money Back" },
+            { icon: Truck, text: "Free Shipping Over $50" },
+            { icon: Star, text: "4.8 / 5 Average Rating" },
+          ].map(({ icon: Icon, text }) => (
+            <div key={text} className="flex items-center gap-2">
+              <Icon className="w-4 h-4 text-rose-500" />
+              <span className="text-sm text-stone-600 font-medium tracking-wide">{text}</span>
             </div>
           ))}
         </div>
       </section>
 
       {/* ── Collections ── */}
-      <section className="max-w-7xl mx-auto px-6 py-16">
-        <div className="mb-8">
-          <p className="text-xs font-semibold text-pink-500 uppercase tracking-widest mb-1">Browse By</p>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Shop Collections</h2>
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <p className="text-xs font-semibold text-rose-500 uppercase tracking-widest mb-2">Browse By</p>
+            <h2 className="text-3xl font-bold text-stone-900 tracking-tight">Shop Collections</h2>
+          </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           {collections.map((c) => (
             <Link
               key={c.id}
               href={`/collections/${c.id}`}
-              className="group relative rounded-2xl overflow-hidden aspect-square shadow-sm hover:shadow-lg transition-shadow"
+              className="group relative rounded-2xl overflow-hidden aspect-square shadow-sm hover:shadow-xl transition-all duration-300"
             >
               <Image
                 src={c.image}
@@ -147,10 +162,13 @@ export default function HomePage() {
                 className="object-cover group-hover:scale-110 transition-transform duration-500"
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-3">
-                <p className="text-white text-xs font-semibold leading-tight">{c.name}</p>
-                <p className="text-pink-200 text-xs">{c.productCount} products</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-stone-900/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-3.5">
+                <p className="text-white text-xs font-semibold leading-tight tracking-wide">{c.name}</p>
+                <div className="flex items-center gap-1 mt-1 text-stone-300 group-hover:text-rose-300 transition-colors">
+                  <span className="text-xs">{c.productCount} products</span>
+                  <ChevronRight className="w-3 h-3" />
+                </div>
               </div>
             </Link>
           ))}
@@ -158,16 +176,16 @@ export default function HomePage() {
       </section>
 
       {/* ── Best Sellers ── */}
-      <section className="bg-gradient-to-b from-pink-50/50 to-white py-16">
+      <section className="bg-stone-50 py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-end justify-between mb-8">
+          <div className="flex items-end justify-between mb-10">
             <div>
-              <p className="text-xs font-semibold text-pink-500 uppercase tracking-widest mb-1">Most Popular</p>
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Best Sellers</h2>
+              <p className="text-xs font-semibold text-rose-500 uppercase tracking-widest mb-2">Most Popular</p>
+              <h2 className="text-3xl font-bold text-stone-900 tracking-tight">Best Sellers</h2>
             </div>
             <Link
               href="/collections/facial-devices"
-              className="text-sm text-pink-500 hover:text-pink-600 font-medium flex items-center gap-1"
+              className="text-sm text-stone-500 hover:text-rose-500 font-medium flex items-center gap-1.5 transition-colors"
             >
               View all <ArrowRight className="w-4 h-4" />
             </Link>
@@ -181,37 +199,45 @@ export default function HomePage() {
       </section>
 
       {/* ── Feature Banner ── */}
-      <section className="max-w-7xl mx-auto px-6 py-16">
-        <div className="bg-gradient-to-r from-pink-500 to-rose-500 rounded-3xl overflow-hidden relative">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-4 right-10 w-40 h-40 bg-white rounded-full blur-3xl" />
-            <div className="absolute bottom-4 left-10 w-56 h-56 bg-white rounded-full blur-3xl" />
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        <div className="relative rounded-3xl overflow-hidden bg-stone-900">
+          {/* Subtle gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-rose-900/30 via-transparent to-stone-900/80" />
+          <div className="absolute inset-0">
+            <Image
+              src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1200&q=60"
+              alt=""
+              fill
+              className="object-cover opacity-20"
+              sizes="100vw"
+            />
           </div>
-          <div className="relative px-8 py-12 sm:px-12 sm:py-16 grid sm:grid-cols-2 gap-8 items-center">
+          <div className="relative px-8 py-14 sm:px-14 sm:py-20 grid sm:grid-cols-2 gap-10 items-center">
             <div>
-              <p className="text-pink-100 text-sm font-medium mb-2">Complete Routine</p>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
-                Get Your Full<br />Glow-Up Package
+              <p className="text-rose-400 text-xs font-semibold uppercase tracking-widest mb-3">Complete Routine</p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white leading-tight tracking-tight">
+                Your Full<br />Glow-Up Package
               </h2>
-              <p className="text-pink-100 mt-3 text-sm leading-relaxed">
-                Everything from facial devices to oral care — bundled at up to 60% off. Build your complete beauty routine in one cart.
+              <p className="text-stone-400 mt-4 text-sm leading-relaxed max-w-xs">
+                Every essential from facial devices to oral care, bundled at up to 60% off. Build your complete routine in one cart.
               </p>
               <Link
                 href="/collections/hygiene-kits"
-                className="inline-flex items-center gap-2 bg-white text-pink-600 hover:bg-pink-50 px-6 py-3 rounded-xl text-sm font-bold mt-6 transition-colors"
+                className="inline-flex items-center gap-2 bg-rose-500 hover:bg-rose-400 text-white px-7 py-3.5 rounded-xl text-sm font-semibold mt-8 transition-colors tracking-wide"
               >
                 Shop Care Packages <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {[
-                "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=200&q=80",
-                "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=200&q=80",
-                "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=200&q=80",
-                "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=200&q=80",
+                "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=240&q=80",
+                "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=240&q=80",
+                "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=240&q=80",
+                "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=240&q=80",
               ].map((src, i) => (
-                <div key={i} className="relative rounded-xl overflow-hidden aspect-square shadow-md">
-                  <Image src={src} alt="" fill className="object-cover" sizes="100px" />
+                <div key={i} className="relative rounded-2xl overflow-hidden aspect-square shadow-lg">
+                  <Image src={src} alt="" fill className="object-cover" sizes="120px" />
+                  <div className="absolute inset-0 bg-stone-900/10" />
                 </div>
               ))}
             </div>
@@ -220,11 +246,11 @@ export default function HomePage() {
       </section>
 
       {/* ── Testimonials ── */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-stone-50 py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-10">
-            <p className="text-xs font-semibold text-pink-500 uppercase tracking-widest mb-1">Reviews</p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">What Customers Say</h2>
+          <div className="text-center mb-12">
+            <p className="text-xs font-semibold text-rose-500 uppercase tracking-widest mb-2">Reviews</p>
+            <h2 className="text-3xl font-bold text-stone-900 tracking-tight">What Customers Say</h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
@@ -232,38 +258,41 @@ export default function HomePage() {
                 name: "Sophia M.",
                 avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&q=80",
                 rating: 5,
-                text: "The LED mask changed my skin completely. I had stubborn acne for years and after 3 weeks my skin is clearer than ever!",
+                text: "The LED mask completely transformed my skin. I had stubborn acne for years and after 3 weeks it&apos;s clearer than ever. I wish I had found this sooner.",
                 product: "7-Color LED Light Therapy Face Mask",
               },
               {
                 name: "Jessica L.",
                 avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=80",
                 rating: 5,
-                text: "The skincare routine kit is incredible value. 12 full-size products and everything works beautifully together.",
+                text: "The skincare routine kit is incredible value. Twelve full-size products and everything works beautifully together. My skin has never looked better.",
                 product: "Complete AM/PM Skincare Routine Kit",
               },
               {
                 name: "Aisha K.",
                 avatar: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=80&q=80",
                 rating: 5,
-                text: "Water flosser is a game changer. My dentist noticed the improvement! Teeth whitening kit gave results in under a week.",
+                text: "My dentist noticed the improvement at my last checkup. The water flosser and whitening kit are genuine game-changers. Results in under a week.",
                 product: "Cordless Water Flosser",
               },
             ].map((t) => (
-              <div key={t.name} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <div className="flex gap-0.5 mb-3">
+              <div key={t.name} className="bg-white rounded-2xl p-7 shadow-sm border border-stone-100">
+                <div className="flex gap-0.5 mb-4">
                   {[...Array(t.rating)].map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <p className="text-sm text-gray-700 leading-relaxed">&ldquo;{t.text}&rdquo;</p>
-                <p className="text-xs text-pink-500 mt-2 font-medium">{t.product}</p>
-                <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-50">
-                  <div className="w-8 h-8 rounded-full overflow-hidden relative">
-                    <Image src={t.avatar} alt={t.name} fill className="object-cover" sizes="32px" />
+                <p className="text-sm text-stone-600 leading-relaxed">&ldquo;{t.text}&rdquo;</p>
+                <p className="text-xs text-rose-500 mt-3 font-medium">{t.product}</p>
+                <div className="flex items-center gap-3 mt-5 pt-5 border-t border-stone-50">
+                  <div className="w-9 h-9 rounded-full overflow-hidden relative flex-shrink-0">
+                    <Image src={t.avatar} alt={t.name} fill className="object-cover" sizes="36px" />
                   </div>
-                  <span className="text-sm font-semibold text-gray-900">{t.name}</span>
-                  <span className="ml-auto text-xs text-green-500 font-medium">✓ Verified</span>
+                  <span className="text-sm font-semibold text-stone-900">{t.name}</span>
+                  <div className="ml-auto flex items-center gap-1 text-emerald-500">
+                    <BadgeCheck className="w-3.5 h-3.5" />
+                    <span className="text-xs font-medium">Verified</span>
+                  </div>
                 </div>
               </div>
             ))}

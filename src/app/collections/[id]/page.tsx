@@ -28,27 +28,30 @@ export default async function CollectionPage({ params }: { params: Promise<{ id:
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-gradient-to-r from-pink-50 to-rose-50 border-b border-pink-100">
+      <div className="bg-stone-50 border-b border-stone-100">
         <div className="max-w-7xl mx-auto px-6 py-12">
-          <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-pink-500 transition-colors mb-4">
-            <ArrowLeft className="w-4 h-4" /> Back to Home
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-sm text-stone-400 hover:text-rose-500 transition-colors mb-5"
+          >
+            <ArrowLeft className="w-4 h-4" /> Home
           </Link>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">{collection.name}</h1>
-          <p className="text-gray-500 mt-2 max-w-xl">{collection.description}</p>
-          <p className="text-sm text-pink-500 font-medium mt-1">{products.length} products</p>
+          <p className="text-xs font-semibold text-rose-500 uppercase tracking-widest mb-2">{collection.name}</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-stone-900 tracking-tight">{collection.description}</h1>
+          <p className="text-sm text-stone-400 font-medium mt-2">{products.length} products</p>
         </div>
       </div>
 
-      {/* Browse other collections */}
-      <div className="max-w-7xl mx-auto px-6 py-6 flex gap-2 overflow-x-auto">
+      {/* Collection filter tabs */}
+      <div className="max-w-7xl mx-auto px-6 py-5 flex gap-2 overflow-x-auto border-b border-stone-100">
         {collections.map((c) => (
           <Link
             key={c.id}
             href={`/collections/${c.id}`}
-            className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
+            className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold transition-colors border tracking-wide ${
               c.id === id
-                ? "bg-pink-500 text-white border-pink-500"
-                : "bg-white text-gray-600 border-gray-200 hover:border-pink-300 hover:text-pink-600"
+                ? "bg-stone-900 text-white border-stone-900"
+                : "bg-white text-stone-500 border-stone-200 hover:border-stone-400 hover:text-stone-700"
             }`}
           >
             {c.name}
@@ -57,7 +60,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ id:
       </div>
 
       {/* Products grid */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} />

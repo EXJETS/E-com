@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingCart } from "lucide-react";
+import { ShoppingBag, CheckCircle } from "lucide-react";
 import { Product } from "@/lib/products";
 import { useCart } from "@/lib/cart";
 import { useState } from "react";
@@ -18,14 +18,23 @@ export default function AddToCartButton({ product }: { product: Product }) {
   return (
     <button
       onClick={handleAdd}
-      className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl text-base font-bold transition-all duration-300 shadow-md ${
+      className={`w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl text-sm font-semibold transition-all duration-300 tracking-wide ${
         added
-          ? "bg-green-500 text-white shadow-green-200"
-          : "bg-pink-500 hover:bg-pink-600 text-white shadow-pink-200"
+          ? "bg-emerald-600 text-white"
+          : "bg-stone-900 hover:bg-rose-500 text-white"
       }`}
     >
-      <ShoppingCart className="w-5 h-5" />
-      {added ? "Added to Cart!" : "Add to Cart"}
+      {added ? (
+        <>
+          <CheckCircle className="w-5 h-5" />
+          Added to Bag
+        </>
+      ) : (
+        <>
+          <ShoppingBag className="w-5 h-5" />
+          Add to Bag
+        </>
+      )}
     </button>
   );
 }
