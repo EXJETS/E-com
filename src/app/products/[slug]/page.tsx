@@ -3,7 +3,7 @@ import { products, getProductBySlug, getRelatedProducts, getCollectionById } fro
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Star, Shield, Truck, RotateCcw, Check, BadgeCheck, ChevronRight } from "lucide-react";
-import AddToCartButton from "@/components/AddToCartButton";
+import ProductActions from "@/components/ProductActions";
 import ProductCard from "@/components/ProductCard";
 
 export async function generateStaticParams() {
@@ -131,7 +131,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
           {/* CTA */}
           <div className="mt-8">
-            <AddToCartButton product={product} />
+            <ProductActions product={product} />
           </div>
 
           {/* Trust bar */}

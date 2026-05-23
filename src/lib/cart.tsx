@@ -14,7 +14,7 @@ interface CartState {
 }
 
 type CartAction =
-  | { type: "ADD_ITEM"; product: Product }
+  | { type: "ADD_ITEM"; product: Product; quantity?: number }
   | { type: "REMOVE_ITEM"; productId: string }
   | { type: "UPDATE_QTY"; productId: string; quantity: number }
   | { type: "CLEAR" }
@@ -24,17 +24,18 @@ type CartAction =
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "ADD_ITEM": {
+      const qty = action.quantity ?? 1;
       const existing = state.items.find((i) => i.product.id === action.product.id);
       if (existing) {
         return {
           ...state,
           isOpen: true,
           items: state.items.map((i) =>
-            i.product.id === action.product.id ? { ...i, quantity: i.quantity + 1 } : i
+            i.product.id === action.product.id ? { ...i, quantity: i.quantity + qty } : i
           ),
         };
       }
-      return { ...state, isOpen: true, items: [...state.items, { product: action.product, quantity: 1 }] };
+      return { ...state, isOpen: true, items: [...state.items, { product: action.product, quantity: qty }] };
     }
     case "REMOVE_ITEM":
       return { ...state, items: state.items.filter((i) => i.product.id !== action.productId) };
@@ -62,7 +63,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 interface CartContextValue {
   items: CartItem[];
   isOpen: boolean;
-  addItem: (product: Product) => void;
+  addItem: (product: Product, quantity?: number) => void;
   removeItem: (productId: string) => void;
   updateQty: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -85,7 +86,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       value={{
         items: state.items,
         isOpen: state.isOpen,
-        addItem: (product) => dispatch({ type: "ADD_ITEM", product }),
+        addItem: (product, quantity) => dispatch({ type: "ADD_ITEM", product, quantity }),
         removeItem: (productId) => dispatch({ type: "REMOVE_ITEM", productId }),
         updateQty: (productId, quantity) => dispatch({ type: "UPDATE_QTY", productId, quantity }),
         clearCart: () => dispatch({ type: "CLEAR" }),
