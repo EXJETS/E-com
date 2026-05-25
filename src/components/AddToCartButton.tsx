@@ -22,7 +22,7 @@ export default function AddToCartButton({ product }: { product: Product }) {
       className={`w-full flex items-center justify-center gap-2.5 py-4 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 ${
         state === "added"
           ? "bg-emerald-600 text-white"
-          : "bg-[var(--charcoal)] hover:bg-[var(--accent)] text-white"
+          : "bg-[var(--dark)] hover:bg-[var(--accent)] text-white"
       }`}
     >
       {state === "added" ? (

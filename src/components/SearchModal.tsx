@@ -45,7 +45,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     <div className="fixed inset-0 z-[60]">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-[var(--charcoal)]/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-[var(--dark)]/60 backdrop-blur-sm"
         onClick={onClose}
       />
 
@@ -60,11 +60,11 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search products..."
-            className="flex-1 text-sm text-[var(--charcoal)] placeholder:text-[var(--muted)] outline-none bg-transparent"
+            className="flex-1 text-sm text-[var(--dark)] placeholder:text-[var(--muted)] outline-none bg-transparent"
           />
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[var(--sand)] text-[var(--muted)] hover:text-[var(--charcoal)] transition-colors flex-shrink-0"
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[var(--light)] text-[var(--muted)] hover:text-[var(--dark)] transition-colors flex-shrink-0"
             aria-label="Close search"
           >
             <X className="w-4 h-4" />
@@ -80,9 +80,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <Link
                     href={`/products/${p.slug}`}
                     onClick={onClose}
-                    className="flex items-center gap-4 px-5 py-3 hover:bg-[var(--sand)] transition-colors group"
+                    className="flex items-center gap-4 px-5 py-3 hover:bg-[var(--light)] transition-colors group"
                   >
-                    <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-[var(--sand)] flex-shrink-0">
+                    <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-[var(--light)] flex-shrink-0">
                       <Image
                         src={p.image}
                         alt={p.name}
@@ -92,7 +92,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-[var(--charcoal)] line-clamp-1">{p.name}</p>
+                      <p className="text-sm font-medium text-[var(--dark)] line-clamp-1">{p.name}</p>
                       <p className="text-xs text-[var(--muted)] mt-0.5">{p.category}</p>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
@@ -117,7 +117,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <button
                     key={term}
                     onClick={() => setQuery(term)}
-                    className="px-3.5 py-1.5 rounded-full border border-[var(--border)] text-xs font-medium text-[var(--body)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors"
+                    className="px-3.5 py-1.5 rounded-full border border-[var(--border)] text-xs font-medium text-[var(--text)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors"
                   >
                     {term}
                   </button>

@@ -8,7 +8,7 @@ import Link from "next/link";
 import { ArrowLeft, Lock, CreditCard, CheckCircle, ShoppingBag, Package, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-const FIELD = "w-full bg-white border border-[var(--border)] rounded-xl px-4 py-3 text-sm text-[var(--charcoal)] placeholder:text-[var(--muted)] focus:outline-none focus:border-[var(--accent)] transition-colors";
+const FIELD = "w-full bg-white border border-[var(--border)] rounded-xl px-4 py-3 text-sm text-[var(--dark)] placeholder:text-[var(--muted)] focus:outline-none focus:border-[var(--accent)] transition-colors";
 const LABEL = "block text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)] mb-2";
 
 export default function CheckoutPage() {
@@ -29,20 +29,20 @@ export default function CheckoutPage() {
   /* ── Confirmed state ── */
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[var(--cream)] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--white)] flex items-center justify-center">
         <div className="text-center max-w-md px-8 animate-fade-up">
           <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6 ring-4 ring-emerald-100">
             <CheckCircle className="w-10 h-10 text-emerald-500" />
           </div>
-          <h1 className="font-display text-3xl italic font-semibold text-[var(--charcoal)]">
+          <h1 className=" text-3xl italic font-semibold text-[var(--dark)]">
             Order Confirmed
           </h1>
-          <p className="text-[var(--body)] mt-3 leading-relaxed text-sm">
+          <p className="text-[var(--text)] mt-3 leading-relaxed text-sm">
             Thank you for your order. A confirmation email with tracking details will be with you shortly.
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 bg-[var(--charcoal)] hover:bg-[var(--accent)] text-white px-8 py-3.5 rounded-full font-medium text-sm mt-8 transition-all duration-300 tracking-wide"
+            className="inline-flex items-center gap-2 bg-[var(--dark)] hover:bg-[var(--accent)] text-white px-8 py-3.5 rounded-full font-medium text-sm mt-8 transition-all duration-300 tracking-wide"
           >
             Continue Shopping
           </Link>
@@ -54,15 +54,15 @@ export default function CheckoutPage() {
   /* ── Empty bag ── */
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-[var(--cream)] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--white)] flex items-center justify-center">
         <div className="text-center px-8">
-          <div className="w-16 h-16 bg-[var(--sand)] rounded-full flex items-center justify-center mx-auto mb-5">
-            <ShoppingBag className="w-7 h-7 text-[var(--border-dark)]" />
+          <div className="w-16 h-16 bg-[var(--light)] rounded-full flex items-center justify-center mx-auto mb-5">
+            <ShoppingBag className="w-7 h-7 text-[var(--border)]" />
           </div>
-          <p className="text-[var(--body)] text-base font-medium">Your bag is empty</p>
+          <p className="text-[var(--text)] text-base font-medium">Your bag is empty</p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 bg-[var(--charcoal)] text-white px-7 py-3.5 rounded-full text-sm font-medium mt-5 hover:bg-[var(--accent)] transition-all duration-300"
+            className="inline-flex items-center gap-2 bg-[var(--dark)] text-white px-7 py-3.5 rounded-full text-sm font-medium mt-5 hover:bg-[var(--accent)] transition-all duration-300"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Shop
           </Link>
@@ -72,7 +72,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--sand)]">
+    <div className="min-h-screen bg-[var(--light)]">
       {/* Progress bar */}
       <div className="bg-white border-b border-[var(--border)]">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 py-4 flex items-center gap-3">
@@ -82,7 +82,7 @@ export default function CheckoutPage() {
           <div className="h-3 w-px bg-[var(--border)] mx-2" />
           {["Bag", "Information", "Payment"].map((step, i) => (
             <div key={step} className="flex items-center gap-2">
-              {i > 0 && <ChevronDown className="w-3 h-3 -rotate-90 text-[var(--border-dark)]" />}
+              {i > 0 && <ChevronDown className="w-3 h-3 -rotate-90 text-[var(--border)]" />}
               <span className={`text-xs font-semibold tracking-wide ${i === 1 ? "text-[var(--accent)]" : "text-[var(--muted)]"}`}>
                 {step}
               </span>
@@ -102,7 +102,7 @@ export default function CheckoutPage() {
               <button
                 type="button"
                 onClick={() => setSummaryOpen(!summaryOpen)}
-                className="w-full flex items-center justify-between px-5 py-4 text-sm font-semibold text-[var(--charcoal)]"
+                className="w-full flex items-center justify-between px-5 py-4 text-sm font-semibold text-[var(--dark)]"
               >
                 <div className="flex items-center gap-2">
                   <Package className="w-4 h-4 text-[var(--accent)]" />
@@ -182,7 +182,7 @@ export default function CheckoutPage() {
                 placeholder="Promo code (e.g. GLOW15)"
                 className={`${FIELD} flex-1`}
               />
-              <button type="button" className="px-5 py-3 bg-[var(--charcoal)] text-white text-xs font-semibold rounded-xl hover:bg-[var(--accent)] transition-colors tracking-wide">
+              <button type="button" className="px-5 py-3 bg-[var(--dark)] text-white text-xs font-semibold rounded-xl hover:bg-[var(--accent)] transition-colors tracking-wide">
                 Apply
               </button>
             </div>
@@ -210,7 +210,7 @@ export default function CheckoutPage() {
               <div className="bg-white rounded-2xl border border-[var(--border)] overflow-hidden">
                 <div className="px-6 py-5 border-b border-[var(--border)] flex items-center gap-2">
                   <Package className="w-4 h-4 text-[var(--accent)]" />
-                  <h2 className="text-sm font-bold text-[var(--charcoal)] tracking-wide">Order Summary</h2>
+                  <h2 className="text-sm font-bold text-[var(--dark)] tracking-wide">Order Summary</h2>
                 </div>
                 <MobileOrderItems items={items} totalPrice={totalPrice} shipping={shipping} tax={tax} total={total} />
               </div>
@@ -226,7 +226,7 @@ export default function CheckoutPage() {
 function FormSection({ title, icon, children }: { title: string; icon?: React.ReactNode; children: React.ReactNode }) {
   return (
     <div className="bg-white rounded-2xl border border-[var(--border)] p-6 sm:p-7">
-      <h2 className="text-sm font-bold text-[var(--charcoal)] mb-6 flex items-center gap-2 tracking-wide">
+      <h2 className="text-sm font-bold text-[var(--dark)] mb-6 flex items-center gap-2 tracking-wide">
         {icon}
         {title}
       </h2>
@@ -244,14 +244,14 @@ function MobileOrderItems({ items, totalPrice, shipping, tax, total }: {
       <div className="space-y-5 max-h-72 overflow-y-auto pr-1">
         {items.map((item) => (
           <div key={item.product.id} className="flex items-center gap-3">
-            <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-[var(--sand)] flex-shrink-0">
+            <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-[var(--light)] flex-shrink-0">
               <Image src={item.product.image} alt={item.product.name} fill className="object-cover" sizes="56px" />
               <span className="absolute -top-1.5 -right-1.5 w-4.5 w-[18px] h-[18px] bg-[var(--accent)] text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
                 {item.quantity}
               </span>
             </div>
-            <p className="text-xs font-medium text-[var(--charcoal)] flex-1 line-clamp-2 leading-snug">{item.product.name}</p>
-            <p className="text-sm font-bold text-[var(--charcoal)] flex-shrink-0">
+            <p className="text-xs font-medium text-[var(--dark)] flex-1 line-clamp-2 leading-snug">{item.product.name}</p>
+            <p className="text-sm font-bold text-[var(--dark)] flex-shrink-0">
               ${(item.product.price * item.quantity).toFixed(2)}
             </p>
           </div>
@@ -264,12 +264,12 @@ function MobileOrderItems({ items, totalPrice, shipping, tax, total }: {
           { label: "Shipping",    value: shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`, cls: shipping === 0 ? "text-emerald-600 font-medium" : "" },
           { label: "Tax (8%)",    value: `$${tax.toFixed(2)}`,             cls: "" },
         ].map((r) => (
-          <div key={r.label} className="flex justify-between text-xs text-[var(--body)]">
+          <div key={r.label} className="flex justify-between text-xs text-[var(--text)]">
             <span>{r.label}</span>
             <span className={r.cls}>{r.value}</span>
           </div>
         ))}
-        <div className="flex justify-between font-bold text-[var(--charcoal)] pt-3 border-t border-[var(--border)] text-sm">
+        <div className="flex justify-between font-bold text-[var(--dark)] pt-3 border-t border-[var(--border)] text-sm">
           <span>Total</span>
           <span>${total.toFixed(2)}</span>
         </div>
