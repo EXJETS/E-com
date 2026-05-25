@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart";
+import { AuthProvider } from "@/lib/auth";
+import { WishlistProvider } from "@/lib/wishlist";
 import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer";
 import Footer from "@/components/Footer";
@@ -12,31 +13,28 @@ const geist = Geist({
   subsets: ["latin"],
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
-
 export const metadata: Metadata = {
-  title: "GlowCart — Premium Beauty Devices & Hygiene Care",
+  title: "NexHome — The Future of Smart Living",
   description:
-    "Clinic-quality beauty devices and complete hygiene care packages. LED therapy masks, facial tools, skincare bundles, and more.",
-  keywords: "beauty devices, skincare, hygiene care, facial tools, LED mask, teeth whitening",
+    "Premium smart home devices for security, climate, lighting, and automation. Matter certified, locally processed, built to last.",
+  keywords:
+    "smart home, smart hub, security camera, smart thermostat, LED lighting, home automation, NexHome",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geist.variable} ${playfair.variable}`}>
+    <html lang="en" className={geist.variable}>
       <body className="min-h-screen flex flex-col antialiased">
-        <CartProvider>
-          <Navbar />
-          <CartDrawer />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </CartProvider>
+        <AuthProvider>
+          <WishlistProvider>
+            <CartProvider>
+              <Navbar />
+              <CartDrawer />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </CartProvider>
+          </WishlistProvider>
+        </AuthProvider>
       </body>
     </html>
   );

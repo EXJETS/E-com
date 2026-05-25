@@ -44,17 +44,17 @@ export default function ProductActions({ product }: { product: Product }) {
           <div className="flex items-center border border-[var(--border)] rounded-full overflow-hidden">
             <button
               onClick={() => setQty((q) => Math.max(1, q - 1))}
-              className="w-10 h-10 flex items-center justify-center hover:bg-[var(--sand)] text-[var(--body)] hover:text-[var(--charcoal)] transition-colors"
+              className="w-10 h-10 flex items-center justify-center hover:bg-[var(--light)] text-[var(--text)] hover:text-[var(--dark)] transition-colors"
               aria-label="Decrease quantity"
             >
               <Minus className="w-3.5 h-3.5" />
             </button>
-            <span className="w-10 h-10 flex items-center justify-center text-sm font-semibold text-[var(--charcoal)] border-x border-[var(--border)]">
+            <span className="w-10 h-10 flex items-center justify-center text-sm font-semibold text-[var(--dark)] border-x border-[var(--border)]">
               {qty}
             </span>
             <button
               onClick={() => setQty((q) => q + 1)}
-              className="w-10 h-10 flex items-center justify-center hover:bg-[var(--sand)] text-[var(--body)] hover:text-[var(--charcoal)] transition-colors"
+              className="w-10 h-10 flex items-center justify-center hover:bg-[var(--light)] text-[var(--text)] hover:text-[var(--dark)] transition-colors"
               aria-label="Increase quantity"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -65,10 +65,10 @@ export default function ProductActions({ product }: { product: Product }) {
         {/* Add to Bag button */}
         <button
           onClick={() => handleAdd(qty)}
-          className={`w-full flex items-center justify-center gap-2.5 py-4 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 ${
+          className={`w-full flex items-center justify-center gap-2.5 py-4 rounded text-sm font-semibold tracking-wide transition-all duration-300 ${
             state === "added"
               ? "bg-emerald-600 text-white"
-              : "bg-[var(--charcoal)] hover:bg-[var(--accent)] text-white"
+              : "bg-[var(--dark)] hover:bg-[var(--accent)] text-white"
           }`}
         >
           {state === "added" ? (
@@ -91,7 +91,7 @@ export default function ProductActions({ product }: { product: Product }) {
       >
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center gap-4">
           {/* Product image */}
-          <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-[var(--sand)] flex-shrink-0">
+          <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-[var(--light)] flex-shrink-0">
             <Image
               src={product.image}
               alt={product.name}
@@ -103,7 +103,7 @@ export default function ProductActions({ product }: { product: Product }) {
 
           {/* Product info */}
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-[var(--charcoal)] truncate">{product.name}</p>
+            <p className="text-sm font-semibold text-[var(--dark)] truncate">{product.name}</p>
             <p className="text-xs text-[var(--accent)] font-bold">${product.price.toFixed(2)}</p>
           </div>
 
@@ -113,7 +113,7 @@ export default function ProductActions({ product }: { product: Product }) {
             className={`flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 ${
               state === "added"
                 ? "bg-emerald-600 text-white"
-                : "bg-[var(--charcoal)] hover:bg-[var(--accent)] text-white"
+                : "bg-[var(--dark)] hover:bg-[var(--accent)] text-white"
             }`}
           >
             {state === "added" ? (
