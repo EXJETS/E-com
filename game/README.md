@@ -1,10 +1,38 @@
 # Ashvale
 
-A small RuneScape-inspired MMO-style RPG, written in plain Java with Swing. Click to walk,
-train ten skills, bank your loot, smith your own gear, fight the goblins in the south field
-and cook for the village feast.
+A small RuneScape-inspired MMO-style RPG. Click to walk, train ten skills, bank your loot,
+smith your own gear, fight the goblins in the south field and cook for the village feast.
 
-No build tool, no dependencies — a JDK 17 or newer is all it needs.
+It comes in two builds that play the same world:
+
+- **In the browser** — a TypeScript port rendered on a canvas, served by the Next.js app in
+  this repository at [`/game`](../src/app/game/page.tsx). Nothing to install.
+- **On the desktop** — the original Java client in this folder. No build tool, no
+  dependencies; a JDK 17 or newer is all it needs.
+
+Both read the same map file, so the town, the mine and every tree sit in the same place.
+`scripts/generate-map.mjs` regenerates the browser copy from the Java resource:
+
+```bash
+npm run game:map     # after editing game/src/main/resources/maps/ashvale.map
+```
+
+## The browser build
+
+```bash
+npm install
+npm run dev          # then open http://localhost:3000/game
+npm run test:game    # 115 engine checks, no browser needed
+```
+
+The engine (`src/game/`) is plain TypeScript with no framework imports: the same tick loop,
+pathfinding, combat maths and crafting recipes as the Java build, exercised by a mirrored test
+suite. Only the client differs — a canvas viewport plus React panels, with characters saved to
+`localStorage` instead of a file.
+
+![The browser client](docs/browser-screenshot.png)
+
+## The desktop build
 
 ![The town of Ashvale](docs/screenshot.png)
 
@@ -14,8 +42,6 @@ guards on patrol and Aldric waiting by the road.*
 ![The forest and the chicken pen](docs/screenshot-forest.png)
 
 *The north-west forest and the chicken pen — where most characters spend their first hour.*
-
-## Quick start
 
 ```bash
 ./run.sh                       # build if needed, then open the client
@@ -69,10 +95,10 @@ Progression works the way you would expect: mine copper and tin, smelt bronze ba
 furnace, hammer them into gear at the anvil, and use that gear to fight things that drop
 better loot. Fish and cook to keep yourself alive.
 
-## How it is put together
+## How the desktop build is put together
 
 ```
-src/main/java/com/exjets/aetheria/
+game/src/main/java/com/exjets/aetheria/
   Main.java            entry point and command line options
   core/                skills, experience curve, items, inventory, bank, equipment, player
   world/               tiles, scenery, ground items, the map loader and A* pathfinding
@@ -83,6 +109,18 @@ src/main/java/com/exjets/aetheria/
   ui/                  Swing client: viewport, side panel, chatbox and dialogs
 src/main/resources/maps/ashvale.map    the world, as two grids of symbols plus npc spawns
 src/test/java/         a dependency free test suite and the offscreen screenshot tool
+```
+
+The browser port mirrors it:
+
+```
+src/game/
+  core/ world/ npc/ combat/ engine/   the same model, ported to TypeScript
+  ui/render.ts                        canvas drawing
+  save.ts                             localStorage characters
+  tests/run.ts                        the mirrored test suite
+src/components/game/                  React client: canvas, panels, dialogs
+src/app/game/page.tsx                 the /game route
 ```
 
 The engine knows nothing about Swing. `GameEngine.tick()` advances the simulation and reports
@@ -113,7 +151,7 @@ Controlled, and decides which skill gets the four experience per point of damage
 
 ## Testing
 
-`./test.sh` runs 116 checks covering the experience curve, inventory and bank rules, map
+`./test.sh` runs the desktop suite's 116 checks covering the experience curve, inventory and bank rules, map
 loading and reachability, pathfinding, the combat formulas, gathering, smelting, cooking,
 kills and drops, death and respawn, shop prices, the quest and a save round trip. It needs no
 display and exits non-zero on failure, so it drops straight into CI.
@@ -125,8 +163,10 @@ renderer covered on headless machines:
 java -cp build/classes com.exjets.aetheria.ScreenshotTool docs/screenshot.png 31,21
 ```
 
+`npm run test:game` runs the browser port's 115 equivalents through the TypeScript engine.
+
 ## Saving
 
-Characters are stored at `~/.aetheria/character.save` as plain text, one `key=value` per line,
-and the game autosaves every 250 ticks and on exit. Unknown items are skipped on load, so an
-old save still opens after the item list changes.
+The desktop build stores characters at `~/.aetheria/character.save`; the browser build keeps
+the same `key=value` text in `localStorage`. Both autosave every 250 ticks and on exit, and
+both skip unknown items on load, so an old save still opens after the item list changes.
