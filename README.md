@@ -20,6 +20,18 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Ashvale, the browser game
+
+`/game` serves a small RuneScape-inspired RPG that ships with this app: a canvas client over a
+framework-free TypeScript engine in `src/game/`, with characters saved in `localStorage`.
+
+```bash
+npm run test:game    # 115 engine checks, no browser needed
+npm run game:map     # regenerate the world data from game/src/main/resources/maps/ashvale.map
+```
+
+The same world also runs as a desktop Java client — see [`game/README.md`](game/README.md).
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

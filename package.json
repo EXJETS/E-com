@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:game": "tsc -p tsconfig.game-test.json && node .game-test/tests/run.js",
+    "game:map": "node scripts/generate-map.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.16.0",

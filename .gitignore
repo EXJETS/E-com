@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# java game build output
+/game/build/
+*.save
+
+# compiled browser game tests
+/.game-test/
