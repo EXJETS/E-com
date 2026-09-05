@@ -1,128 +1,190 @@
 import Link from "next/link";
-import { Gem, Truck, RotateCcw, ShieldCheck, Star } from "lucide-react";
-import { collections } from "@/lib/products";
-import NewsletterForm from "./NewsletterForm";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { site } from "@/lib/site";
+import { services } from "@/lib/services";
+import { areas } from "@/lib/areas";
 
-const trust = [
-  { icon: Truck,       title: "Free Shipping",    desc: "On orders over $50" },
-  { icon: RotateCcw,   title: "30-Day Returns",    desc: "Hassle-free guarantee" },
-  { icon: ShieldCheck, title: "Secure Checkout",   desc: "256-bit SSL" },
-  { icon: Star,        title: "4.8 / 5 Rated",    desc: "200,000+ customers" },
-];
-
-const social = [
-  {
+/** Brand marks are not part of the Lucide set, so they are inlined here. */
+const socialIcons = {
+  facebook: {
+    label: "Facebook",
+    path: "M14 8.5V7c0-.7.5-.9.9-.9H16V3.6l-2-.1c-2.3 0-3.4 1.4-3.4 3.3v1.7H8.7V11h1.9v9.4h3.1V11h2.1l.4-2.5H14Z",
+  },
+  instagram: {
     label: "Instagram",
-    href: "#",
-    svg: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg>,
+    path: "M12 7.6a4.4 4.4 0 1 0 0 8.8 4.4 4.4 0 0 0 0-8.8Zm0 7.2a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6Zm5.6-7.4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM8.4 3.2h7.2A5.2 5.2 0 0 1 20.8 8.4v7.2a5.2 5.2 0 0 1-5.2 5.2H8.4a5.2 5.2 0 0 1-5.2-5.2V8.4a5.2 5.2 0 0 1 5.2-5.2Zm0 1.7A3.5 3.5 0 0 0 4.9 8.4v7.2a3.5 3.5 0 0 0 3.5 3.5h7.2a3.5 3.5 0 0 0 3.5-3.5V8.4a3.5 3.5 0 0 0-3.5-3.5H8.4Z",
   },
-  {
-    label: "TikTok",
-    href: "#",
-    svg: <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.78 1.52V6.76a4.84 4.84 0 01-1.01-.07z"/></svg>,
+  youtube: {
+    label: "YouTube",
+    path: "M21.3 8.1a2.4 2.4 0 0 0-1.7-1.7C18.1 6 12 6 12 6s-6.1 0-7.6.4A2.4 2.4 0 0 0 2.7 8.1 25 25 0 0 0 2.3 12c0 1.3.1 2.6.4 3.9a2.4 2.4 0 0 0 1.7 1.7c1.5.4 7.6.4 7.6.4s6.1 0 7.6-.4a2.4 2.4 0 0 0 1.7-1.7c.3-1.3.4-2.6.4-3.9 0-1.3-.1-2.6-.4-3.9ZM10.1 14.9V9.1l5.1 2.9-5.1 2.9Z",
   },
-  {
-    label: "Pinterest",
-    href: "#",
-    svg: <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.04-2.83.18-.77 1.22-5.17 1.22-5.17s-.31-.62-.31-1.54c0-1.45.84-2.53 1.88-2.53.89 0 1.32.67 1.32 1.47 0 .9-.57 2.24-.87 3.48-.25 1.04.52 1.88 1.54 1.88 1.84 0 3.08-2.37 3.08-5.17 0-2.14-1.44-3.63-3.5-3.63-2.39 0-3.78 1.79-3.78 3.64 0 .72.28 1.49.62 1.91.07.08.08.15.06.24l-.23.95c-.04.15-.13.18-.29.11-1.08-.5-1.76-2.09-1.76-3.37 0-2.74 2-5.26 5.76-5.26 3.02 0 5.37 2.15 5.37 5.03 0 3-1.89 5.41-4.51 5.41-.88 0-1.71-.46-1.99-1l-.54 2.03c-.2.75-.73 1.69-1.08 2.27.81.25 1.67.39 2.55.39 5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>,
+  linkedin: {
+    label: "LinkedIn",
+    path: "M6.9 20.4H3.6V9.7h3.3v10.7ZM5.2 8.2A1.9 1.9 0 1 1 5.2 4.4a1.9 1.9 0 0 1 0 3.8Zm15.2 12.2h-3.3v-5.2c0-1.2 0-2.8-1.7-2.8s-2 1.4-2 2.7v5.3H10V9.7h3.2v1.5h.1c.5-.9 1.6-1.7 3.2-1.7 3.4 0 4 2.2 4 5.1v5.8Z",
   },
-];
+} as const;
 
 export default function Footer() {
+  const year = new Date().getFullYear();
+
+  // pb-16 clears the fixed mobile call bar on small screens
   return (
-    <footer className="bg-[var(--charcoal)] text-stone-400">
+    <footer className="ground-navy mt-auto pb-16 text-white/70 sm:pb-0">
+      <div className="rule-gradient" />
 
-      {/* Trust bar */}
-      <div className="border-b border-stone-800/70">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {trust.map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-stone-800 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--accent)] transition-colors duration-300">
-                <Icon className="w-4 h-4 text-rose-400 group-hover:text-white transition-colors" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-stone-200">{title}</p>
-                <p className="text-xs text-stone-500 mt-0.5">{desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <div className="container-page py-14 lg:py-18">
+        <div className="grid gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1.1fr]">
+          {/* Brand + contact */}
+          <div>
+            <p className="font-[family-name:var(--font-display)] text-[22px] font-bold text-white">
+              Baker Brothers
+            </p>
+            <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.17em] text-cool-300">
+              Plumbing · Air · Electric
+            </p>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed">
+              Licensed heating, cooling, plumbing and electrical service across the Dallas–Fort Worth
+              metroplex since {site.founded}.
+            </p>
 
-      {/* Main content */}
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12">
-
-        {/* Brand */}
-        <div className="sm:col-span-2 md:col-span-1">
-          <Link href="/" className="inline-flex items-center gap-2 mb-5 group">
-            <Gem className="w-4 h-4 text-rose-400" />
-            <span className="font-display text-lg font-semibold italic text-stone-100">
-              Glow<span className="text-rose-400 not-italic">Cart</span>
-            </span>
-          </Link>
-          <p className="text-sm text-stone-500 leading-relaxed max-w-[220px]">
-            Premium beauty devices and hygiene care packages for real, visible results.
-          </p>
-          <div className="flex gap-2.5 mt-6">
-            {social.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                aria-label={s.label}
-                className="w-9 h-9 bg-stone-800 rounded-full flex items-center justify-center text-stone-400 hover:bg-[var(--accent)] hover:text-white transition-all duration-200"
-              >
-                {s.svg}
+            <div className="mt-6 space-y-3 text-sm">
+              <a href={site.phone.href} className="flex items-center gap-2.5 text-white transition-colors hover:text-cool-300">
+                <Phone size={16} className="shrink-0 text-cool-400" />
+                <span className="font-semibold">{site.phone.display}</span>
               </a>
-            ))}
+              <a href={`mailto:${site.email}`} className="flex items-center gap-2.5 transition-colors hover:text-white">
+                <Mail size={16} className="shrink-0 text-cool-400" />
+                {site.email}
+              </a>
+              <p className="flex items-start gap-2.5">
+                <Clock size={16} className="mt-0.5 shrink-0 text-cool-400" />
+                <span>
+                  Mon–Fri {site.hours.weekday}
+                  <br />
+                  Sat–Sun {site.hours.weekend}
+                  <br />
+                  <span className="text-ember-400">24/7 emergency dispatch</span>
+                </span>
+              </p>
+            </div>
+
+            <div className="mt-6 flex gap-2">
+              {(Object.keys(socialIcons) as (keyof typeof socialIcons)[]).map((key) => {
+                const icon = socialIcons[key];
+                return (
+                  <a
+                    key={key}
+                    href={site.social[key]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={icon.label}
+                    className="grid h-9 w-9 place-items-center rounded-lg border border-white/12 transition-colors hover:border-cool-400 hover:text-white"
+                  >
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d={icon.path} />
+                    </svg>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Services */}
+          <div>
+            <h3 className="mb-4 text-[11px] font-bold uppercase tracking-[0.16em] text-white">Services</h3>
+            <ul className="space-y-2 text-sm">
+              {services.slice(0, 8).map((s) => (
+                <li key={s.slug}>
+                  <Link href={`/services/${s.slug}`} className="transition-colors hover:text-white">
+                    {s.name}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/services" className="font-semibold text-cool-300 transition-colors hover:text-white">
+                  All services →
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h3 className="mb-4 text-[11px] font-bold uppercase tracking-[0.16em] text-white">Company</h3>
+            <ul className="space-y-2 text-sm">
+              {[
+                { label: "About Us", href: "/about" },
+                { label: "Reviews", href: "/reviews" },
+                { label: "Current Specials", href: "/specials" },
+                { label: "Comfort Club", href: "/membership" },
+                { label: "Financing", href: "/financing" },
+                { label: "HVAC Advice", href: "/blog" },
+                { label: "FAQ", href: "/faq" },
+                { label: "Contact", href: "/contact" },
+                { label: "Book Service", href: "/schedule" },
+              ].map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="transition-colors hover:text-white">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Locations */}
+          <div>
+            <h3 className="mb-4 text-[11px] font-bold uppercase tracking-[0.16em] text-white">Service Centres</h3>
+            <ul className="space-y-4 text-sm">
+              {site.locations.map((l) => (
+                <li key={l.id} className="flex items-start gap-2.5">
+                  <MapPin size={16} className="mt-0.5 shrink-0 text-cool-400" />
+                  <span>
+                    <span className="block font-semibold text-white">{l.label}</span>
+                    {l.street}
+                    <br />
+                    {l.city}, {l.state} {l.zip}
+                    <br />
+                    <a href={l.phone.href} className="text-cool-300 hover:text-white">
+                      {l.phone.display}
+                    </a>
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
-        {/* Collections */}
-        <div>
-          <h4 className="footer-heading">Collections</h4>
-          <ul className="space-y-2.5">
-            {collections.map((c) => (
-              <li key={c.id}>
-                <Link href={`/collections/${c.id}`} className="footer-link">{c.name}</Link>
+        {/* Service-area link farm — genuine internal linking for local SEO */}
+        <div className="mt-12 border-t border-white/10 pt-8">
+          <h3 className="mb-4 text-[11px] font-bold uppercase tracking-[0.16em] text-white">
+            HVAC Service Across Dallas–Fort Worth
+          </h3>
+          <ul className="flex flex-wrap gap-x-1 gap-y-1.5 text-[13px]">
+            {areas.map((a, i) => (
+              <li key={a.slug} className="flex items-center gap-1">
+                <Link href={`/service-areas/${a.slug}`} className="transition-colors hover:text-white">
+                  {a.city}
+                </Link>
+                {i < areas.length - 1 && <span className="text-white/20">·</span>}
               </li>
             ))}
           </ul>
         </div>
+      </div>
 
-        {/* Support */}
-        <div>
-          <h4 className="footer-heading">Support</h4>
-          <ul className="space-y-2.5">
-            {["FAQ", "Shipping Info", "Returns & Exchanges", "Track Your Order", "Contact Us"].map((item) => (
-              <li key={item}>
-                <a href="#" className="footer-link">{item}</a>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Newsletter */}
-        <div>
-          <h4 className="footer-heading">Stay in the Glow</h4>
-          <p className="text-sm text-stone-500 mb-4 leading-relaxed">
-            Exclusive deals, skincare tips, and new arrivals — straight to your inbox.
+      <div className="border-t border-white/10">
+        <div className="container-page flex flex-col gap-3 py-5 text-[12.5px] md:flex-row md:items-center md:justify-between">
+          <p>
+            © {year} {site.legalName}. All rights reserved.
           </p>
-          <NewsletterForm />
-        </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div className="border-t border-stone-800/70 py-5 px-5 sm:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-stone-600">
-          <span>&copy; 2025 GlowCart. All rights reserved.</span>
-          <div className="flex gap-6">
-            {["Privacy Policy", "Terms of Service", "Cookie Settings"].map((l) => (
-              <a key={l} href="#" className="hover:text-stone-400 transition-colors">{l}</a>
+          <p className="flex flex-wrap gap-x-4 gap-y-1">
+            {site.licenses.map((l) => (
+              <span key={l}>{l}</span>
             ))}
-          </div>
+          </p>
         </div>
       </div>
-
     </footer>
   );
 }
