@@ -79,6 +79,29 @@ business-to-end-client integrations, which is exactly what this page is. If the 
 rejects the call with an authorization error even though the tokens are right, check that
 the token is provisioned for an end-client application rather than a B2B one.
 
+### Is it actually working? — `/api/avinode/health`
+
+Set `AVINODE_DEBUG=1` and open `/api/avinode/health`. It performs one real search
+against Avinode and reports the unvarnished result as JSON: which credentials the
+process can see (presence and length only — values are never included), the exact
+headers and body being sent with the two secret headers redacted, the HTTP status
+Avinode returned, and the raw response.
+
+```jsonc
+{
+  "ok": true,
+  "summary": "Avinode answered 200 with 6 lift(s). The integration is working.",
+  "credentials": { "AVINODE_API_TOKEN": "set (36 chars)", "...": "..." },
+  "sentHeaders": { "Authorization": "<redacted, 674 chars>", "...": "..." },
+  "httpStatus": 200,
+  "responseBody": { "...": "the real payload, for correcting field paths" }
+}
+```
+
+Without `AVINODE_DEBUG=1` the route returns 404, so it stays inert in a normal
+production deploy. This is the fastest way to tell a credential problem from a
+network problem from a response-shape problem.
+
 ### Verifying against the live sandbox
 
 The response normalizer in `src/lib/avinode.ts` reads each field from several candidate

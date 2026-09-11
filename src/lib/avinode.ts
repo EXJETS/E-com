@@ -322,3 +322,115 @@ function sampleQuotes(
     quotes: buildSampleQuotes(input.pax, route.from, route.to),
   };
 }
+
+/* ── Diagnostics ─────────────────────────────────────────────────────────
+   Powers /api/avinode/health. Reports exactly what the integration is
+   sending and exactly what Avinode says back, so a failing setup can be
+   read off one URL instead of inferred from the fallback banner. */
+
+export type AvinodeDiagnosis = {
+  ok: boolean;
+  summary: string;
+  baseUrl: string;
+  /** Presence and length only — token values are never reported. */
+  credentials: Record<string, string>;
+  sentHeaders: Record<string, string>;
+  sentBody: unknown;
+  httpStatus?: number;
+  responseBody?: unknown;
+  error?: string;
+};
+
+/** Redact the two secret headers, keep everything else verbatim. */
+function redactedHeaders(): Record<string, string> {
+  const sent = headers() as Record<string, string>;
+  return Object.fromEntries(
+    Object.entries(sent).map(([key, value]) =>
+      key === "Authorization" || key === "X-Avinode-ApiToken"
+        ? [key, `<redacted, ${value.length} chars>`]
+        : [key, value],
+    ),
+  );
+}
+
+function describe(name: string, value: string | undefined): string {
+  return value ? `set (${value.length} chars)` : "MISSING";
+}
+
+/** Run one real search against Avinode and report the unvarnished result. */
+export async function diagnoseAvinode(): Promise<AvinodeDiagnosis> {
+  const credentials = {
+    AVINODE_API_TOKEN: describe("AVINODE_API_TOKEN", API_TOKEN),
+    AVINODE_AUTH_TOKEN: describe("AVINODE_AUTH_TOKEN", AUTH_TOKEN),
+    AVINODE_API_VERSION: API_VERSION,
+    AVINODE_PRODUCT: PRODUCT,
+  };
+
+  const sentBody = {
+    segments: [
+      {
+        startAirport: { icao: "EGGW" },
+        endAirport: { icao: "LFMN" },
+        dateTime: { date: "2026-12-01", time: "10:00", departure: true, local: true },
+        paxCount: 4,
+      },
+    ],
+  };
+
+  const base = {
+    baseUrl: BASE_URL,
+    credentials,
+    sentHeaders: redactedHeaders(),
+    sentBody,
+  };
+
+  if (!isAvinodeConfigured()) {
+    return {
+      ...base,
+      ok: false,
+      summary:
+        "Credentials are missing from this process. Set them in .env.local (local) " +
+        "or your host's project settings (deployed), then restart or redeploy.",
+    };
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}/searches`, {
+      method: "POST",
+      headers: headers(),
+      cache: "no-store",
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+      body: JSON.stringify(sentBody),
+    });
+
+    const raw = await response.text();
+    let parsed: unknown = raw.slice(0, 20_000);
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      // Not JSON — the truncated text above is more useful than an error.
+    }
+
+    const liftCount = firstArray(parsed, "data.lifts", "lifts", "data.searchResults").length;
+
+    return {
+      ...base,
+      ok: response.ok,
+      httpStatus: response.status,
+      responseBody: parsed,
+      summary: response.ok
+        ? `Avinode answered ${response.status} with ${liftCount} lift(s). ` +
+          (liftCount
+            ? "The integration is working."
+            : "Authentication is fine, but this routing returned no lifts.")
+        : `Avinode rejected the call with HTTP ${response.status}. See responseBody.`,
+    };
+  } catch (error) {
+    return {
+      ...base,
+      ok: false,
+      error: error instanceof Error ? error.message : String(error),
+      summary: `Could not reach ${BASE_URL}. The host may be blocked by a network policy.`,
+    };
+  }
+}
