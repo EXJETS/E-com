@@ -61,18 +61,32 @@ body {
 
 /* ── Typography ─────────────────────────────────────────────────────── */
 .jet-eyebrow {
-  font-size: 10px;
+  /* rem, not px, so it scales with the reader's text-size setting */
+  font-size: 0.625rem;
   font-weight: 600;
+  /* Small text wants positive tracking to stay legible. */
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--jet-gold);
 }
 
+/*
+ * One heading class spans 18px card titles to a 68px hero, so a single
+ * letter-spacing and line-height would be wrong at one end or the other.
+ * Both are expressed as size-derived curves instead:
+ *
+ *   tracking  calc(0.4px - 0.024em)  ~0 at 18px, about -0.018em at 68px —
+ *             letters read too far apart as type grows, so it tightens.
+ *   leading   calc(1em + 0.3rem)     ~1.27 at 18px, ~1.07 at 68px — leading
+ *             tracks size inversely; large text needs proportionally less.
+ */
 .jet-heading {
   font-family: var(--font-display);
   font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+  letter-spacing: calc(0.4px - 0.024em);
+  line-height: calc(1em + 0.3rem);
+  font-optical-sizing: auto;
+  text-wrap: balance;
 }
 
 /* Hairline rule that fades out at both ends */
@@ -125,7 +139,7 @@ input[type="time"] { color-scheme: dark; }
 
 .jet-label {
   display: block;
-  font-size: 10px;
+  font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -138,12 +152,12 @@ input[type="time"] { color-scheme: dark; }
   color: #17120A;
   font-weight: 600;
   border-radius: 8px;
-  transition: filter 0.15s, transform 0.15s;
+  transition: filter 0.15s, transform 100ms ease-out;
 }
 @media (hover: hover) and (pointer: fine) {
   .jet-cta:hover:not(:disabled) { filter: brightness(1.07); }
 }
-.jet-cta:active:not(:disabled) { transform: translateY(1px); }
+.jet-cta:active:not(:disabled) { transform: scale(0.97); }
 .jet-cta:disabled { opacity: 0.65; cursor: progress; }
 
 /* ── Surfaces ───────────────────────────────────────────────────────── */
@@ -185,4 +199,45 @@ input[type="time"] { color-scheme: dark; }
   /* Gentler, not zero: the fade still signals arrival, the travel is dropped. */
   .jet-fade-up { animation: jetFade 200ms ease both; }
   .jet-card:hover { transform: none; }
+}
+
+/* ── Material preferences ───────────────────────────────────────────────
+   Translucency is a preference, not a given: when it is turned down the
+   chrome becomes solid rather than merely less blurred, and under increased
+   contrast the hairlines become real borders. */
+@media (prefers-reduced-transparency: reduce) {
+  .jet-chrome {
+    background: var(--jet-ink);
+    backdrop-filter: none;
+  }
+  .jet-chrome::after { display: none; }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --jet-line:      rgba(201, 169, 97, 0.55);
+    --jet-line-soft: rgba(233, 237, 245, 0.4);
+    --jet-muted:     #C2CCDC;
+    --jet-dim:       #9AA7BC;
+  }
+  .jet-chrome {
+    background: var(--jet-ink);
+    backdrop-filter: none;
+  }
+}
+
+/* ── Scroll edge ────────────────────────────────────────────────────────
+   Floating chrome meets content with a short fade rather than a 1px rule —
+   the content reads as passing under a material instead of being cut by a
+   line. */
+.jet-chrome {
+  position: relative;
+}
+.jet-chrome::after {
+  content: "";
+  position: absolute;
+  inset: 100% 0 auto 0;
+  height: 24px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(8, 13, 22, 0.55), transparent);
 }

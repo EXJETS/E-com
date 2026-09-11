@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${geist.variable} ${playfair.variable}`}>
       <body className="antialiased">
-        <header className="sticky top-0 z-40 border-b border-[var(--jet-line-soft)] bg-[rgba(8,13,22,0.82)] backdrop-blur-md">
+        <header className="jet-chrome sticky top-0 z-40 bg-[rgba(8,13,22,0.72)] backdrop-blur-xl">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
             <Link href="/" className="flex items-baseline gap-2">
               <span className="jet-heading text-xl tracking-[0.02em] text-[var(--jet-text)]">
