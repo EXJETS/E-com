@@ -1,8 +1,9 @@
 /**
  * Server-side client for the Avinode Marketplace API (sandbox).
  *
- * Credentials live in `.env.local` and are never exposed to the browser — every
- * function here is only ever awaited from Server Components.
+ * Credentials are read from the process environment (`.env.local` in local
+ * development, the host's project settings once deployed) and are never exposed
+ * to the browser — every function here is only ever awaited from Server Components.
  *
  * Sandbox base URL: https://sandbox.avinode.com/api
  * Auth: an API token identifies the integration, a bearer token the Avinode user.
@@ -210,7 +211,8 @@ export async function searchCharterQuotes(input: TripSearchInput): Promise<Quote
     return {
       ...sampleQuotes(input, route),
       notice:
-        "Set AVINODE_API_TOKEN and AVINODE_AUTH_TOKEN in .env.local to query the live sandbox.",
+        "Set AVINODE_API_TOKEN and AVINODE_AUTH_TOKEN in your environment — .env.local " +
+        "when running locally, or your host's project settings when deployed.",
     };
   }
 
