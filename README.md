@@ -128,6 +128,61 @@ you can read the real path off it and add it to the matching `first*()` call. Ai
 `CharterQuote.imageUrl` is captured but unused, since Avinode's image hosts still need
 adding to `images.remotePatterns` in `next.config.ts`.
 
+## Wiring this into the exjet.com app
+
+`exjet.com` (GitHub `EXJETS/exjet`) is a complete charter front-end — search, booking
+flow, customer dashboard, operator portal, admin — served entirely from static JSON in
+`src/data/`. It makes no network calls at all. This repo is the opposite: a working
+Avinode data layer behind a single page. `src/lib/exjet-adapter.ts` is the seam between
+them.
+
+### The model mismatch
+
+The two apps describe different things, and the adapter is explicit about it rather than
+pretending otherwise:
+
+| | exjet's `Jet` | Avinode lift |
+| --- | --- | --- |
+| Represents | an aircraft **model** in a catalogue | one **tail**, one operator, one routing |
+| Price | `hourlyRate` on the model | total for the searched trip |
+| Category | 5-value enum | free text ("Super midsize jet") |
+| Specs, photos, rating | present | absent |
+
+`toQuotedJet()` maps what the marketplace genuinely provides, derives `hourlyRate` from
+the quoted total over billable flight time (comparable across results on one routing),
+and fills `range`/`speed` from published per-type figures so the spec line isn't zeros.
+
+`UNAVAILABLE_FIELDS` lists what it deliberately will not invent. **`rating` and
+`reviewCount` are the ones that matter**: these are real operators, and manufacturing a
+trust score for them would be misleading rather than cosmetic. Hide those elements on
+quote-backed cards instead of filling them.
+
+### The change in the exjet app
+
+Copy `src/lib/avinode.ts`, `charter-fallback.ts`, `airports.ts` and `exjet-adapter.ts`
+across, add the environment variables, then in `src/app/search/page.tsx` replace the
+static import:
+
+```diff
+- import jetsData from "@/data/jets.json";
++ import { searchCharterQuotes } from "@/lib/avinode";
++ import { toQuotedJets } from "@/lib/exjet-adapter";
+```
+
+`searchCharterQuotes()` is server-only — the credentials must never reach the browser —
+so the search page needs to become a Server Component that awaits it and passes results
+down, with its current client-side filtering either kept below that boundary or moved
+into the query. The existing `FilterSidebar` and `JetGrid` work unchanged, since the
+adapter satisfies every field they read (`category`, `hourlyRate`, `passengers`, plus
+`name`, `manufacturer`, `range`, `speed` for display).
+
+### Caveat
+
+The category mapping order is load-bearing — `super midsize` must be tested before
+`midsize`, and `ultra long`/`long range` before `light`, or aircraft land in the wrong
+filter bucket. There is no test runner in this repo to guard that; adding one is worth
+doing before this mapping grows.
+
 ## Scripts
 
 | Command | Description |
