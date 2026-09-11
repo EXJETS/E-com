@@ -21,7 +21,9 @@ Open [http://localhost:3000](http://localhost:3000).
 | `AVINODE_API_BASE_URL` | Sandbox by default; point at `https://services.avinode.com/api` for production. |
 | `AVINODE_API_TOKEN` | Sent as `X-Avinode-ApiToken` — identifies the integration. |
 | `AVINODE_AUTH_TOKEN` | Sent as `Authorization: Bearer …` — identifies the Avinode user. |
-| `AVINODE_PRODUCT` | Free-form integration name, sent as `X-Avinode-Product`. |
+| `AVINODE_API_VERSION` | Sent as `X-Avinode-ApiVersion`, defaults to `v1`. Required on every request. |
+| `AVINODE_PRODUCT` | Your application's name and version, sent as `X-Avinode-Product`. |
+| `AVINODE_DEBUG` | `1` logs the outgoing search body and raw response to the server console. |
 
 `.env.local` is gitignored. Credentials are only ever read in `src/lib/avinode.ts`, which
 runs on the server, so they never reach the browser bundle. When deploying, set the same
@@ -63,13 +65,29 @@ locally estimated quotes from `src/lib/charter-fallback.ts` instead of failing. 
 carries a `source` of `sample` rather than `avinode`, and the UI switches its badge to
 "Estimated pricing" and prints the reason — the state is never silent.
 
+### Request format
+
+Avinode requires four headers on every call — `X-Avinode-ApiToken`,
+`Authorization: Bearer`, `X-Avinode-ApiVersion` and `X-Avinode-SentTimestamp`. The
+timestamp is documented to the minute (`2010-01-01T00:00Z`), not with the milliseconds
+`Date.toISOString()` emits, and a missing or malformed one is the documented most common
+cause of authentication errors — so `sentTimestamp()` truncates deliberately. Don't
+"fix" it back to a full ISO string.
+
+`POST /searches` is the **End Client Trip Search** operation: Avinode restricts it to
+business-to-end-client integrations, which is exactly what this page is. If the sandbox
+rejects the call with an authorization error even though the tokens are right, check that
+the token is provisioned for an end-client application rather than a B2B one.
+
 ### Verifying against the live sandbox
 
 The response normalizer in `src/lib/avinode.ts` reads each field from several candidate
 paths, because lift payloads nest differently across Marketplace API endpoints and
-versions. Once you can reach the sandbox, run a search and confirm the badge reads
-"Live Avinode sandbox"; if fields come back blank, log the raw payload and add the correct
-path to the matching `first*()` call. Aircraft photos are deliberately not rendered yet —
+versions — it accepts both the nested form and the plain-string form
+(`aircraftType: "Challenger 350"`) that Avinode's own examples show. Once you can reach the
+sandbox, run a search with `AVINODE_DEBUG=1` and confirm the badge reads "Live Avinode
+sandbox"; the raw payload is printed to the server console, so if a field comes back blank
+you can read the real path off it and add it to the matching `first*()` call. Aircraft photos are deliberately not rendered yet —
 `CharterQuote.imageUrl` is captured but unused, since Avinode's image hosts still need
 adding to `images.remotePatterns` in `next.config.ts`.
 

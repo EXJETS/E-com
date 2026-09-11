@@ -14,8 +14,10 @@ import { buildSampleQuotes } from "@/lib/charter-fallback";
 const BASE_URL = process.env.AVINODE_API_BASE_URL ?? "https://sandbox.avinode.com/api";
 const API_TOKEN = process.env.AVINODE_API_TOKEN;
 const AUTH_TOKEN = process.env.AVINODE_AUTH_TOKEN;
-const PRODUCT = process.env.AVINODE_PRODUCT ?? "exjet-charter-landing";
+const PRODUCT = process.env.AVINODE_PRODUCT ?? "exjet-charter-landing/1.0";
+const API_VERSION = process.env.AVINODE_API_VERSION ?? "v1";
 const TIMEOUT_MS = 12_000;
+const DEBUG = process.env.AVINODE_DEBUG === "1";
 
 export type TripSearchInput = {
   from: string;
@@ -54,12 +56,22 @@ export function isAvinodeConfigured(): boolean {
   return Boolean(API_TOKEN && AUTH_TOKEN);
 }
 
+/**
+ * Avinode documents this header to the minute — `2010-01-01T00:00Z` — not with
+ * the milliseconds `toISOString()` emits. Omitting or malforming it is the
+ * documented most common cause of authentication errors.
+ */
+function sentTimestamp(): string {
+  return `${new Date().toISOString().slice(0, 16)}Z`;
+}
+
 function headers(): HeadersInit {
   return {
     Authorization: `Bearer ${AUTH_TOKEN}`,
     "X-Avinode-ApiToken": API_TOKEN ?? "",
+    "X-Avinode-ApiVersion": API_VERSION,
     "X-Avinode-Product": PRODUCT,
-    "X-Avinode-SentTimestamp": new Date().toISOString(),
+    "X-Avinode-SentTimestamp": sentTimestamp(),
     "Content-Type": "application/json",
     Accept: "application/json",
   };
@@ -127,6 +139,7 @@ function normalizeLift(lift: unknown, index: number): CharterQuote {
     aircraftType:
       firstString(
         lift,
+        "aircraftType",
         "aircraftTail.aircraftType.displayName",
         "aircraftTail.aircraftType.name",
         "aircraftType.displayName",
@@ -135,12 +148,18 @@ function normalizeLift(lift: unknown, index: number): CharterQuote {
     category:
       firstString(
         lift,
+        "aircraftCategory",
         "aircraftTail.aircraftType.category.displayName",
         "aircraftTail.aircraftType.category",
         "aircraftCategory.displayName",
-        "aircraftCategory",
       ) ?? "Private jet",
-    tailNumber: firstString(lift, "aircraftTail.tailNumber", "aircraftTail.displayName", "tailNumber"),
+    tailNumber: firstString(
+      lift,
+      "aircraftTail",
+      "aircraftTail.tailNumber",
+      "aircraftTail.displayName",
+      "tailNumber",
+    ),
     operator:
       firstString(
         lift,
@@ -173,6 +192,8 @@ function normalizeLift(lift: unknown, index: number): CharterQuote {
       "buyerPrice.price.amount",
       "price.amount",
       "sellerPrice.convertedPrice.amount",
+      "totalPrice",
+      "sellerPrice.totalPrice",
     ),
     priceCurrency: firstString(
       lift,
@@ -180,6 +201,8 @@ function normalizeLift(lift: unknown, index: number): CharterQuote {
       "buyerPrice.price.currency",
       "price.currency",
       "sellerPrice.convertedPrice.currency",
+      "currencyCode",
+      "sellerPrice.currencyCode",
     ),
     imageUrl: firstString(
       lift,
@@ -216,38 +239,48 @@ export async function searchCharterQuotes(input: TripSearchInput): Promise<Quote
     };
   }
 
+  const requestBody = {
+    segments: [
+      {
+        startAirport: { icao: from?.icao ?? input.from.toUpperCase() },
+        endAirport: { icao: to?.icao ?? input.to.toUpperCase() },
+        dateTime: {
+          date: input.date,
+          time: input.time,
+          departure: true,
+          local: true,
+        },
+        paxCount: input.pax,
+      },
+    ],
+  };
+
+  // Never log headers() — it carries both tokens.
+  if (DEBUG) console.log("[avinode] POST /searches", JSON.stringify(requestBody));
+
   try {
     const response = await fetch(`${BASE_URL}/searches`, {
       method: "POST",
       headers: headers(),
       cache: "no-store",
       signal: AbortSignal.timeout(TIMEOUT_MS),
-      body: JSON.stringify({
-        segments: [
-          {
-            startAirport: { icao: from?.icao ?? input.from.toUpperCase() },
-            endAirport: { icao: to?.icao ?? input.to.toUpperCase() },
-            dateTime: {
-              date: input.date,
-              time: input.time,
-              departure: true,
-              local: true,
-            },
-            paxCount: input.pax,
-          },
-        ],
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
-      const body = (await response.text()).slice(0, 200);
+      const body = (await response.text()).slice(0, 400);
+      if (DEBUG) console.log(`[avinode] ${response.status}`, body);
       return {
         ...sampleQuotes(input, route),
-        notice: `Avinode sandbox returned ${response.status}. ${body || "No response body."}`,
+        notice: `Avinode sandbox returned ${response.status}. ${
+          body.slice(0, 200) || "No response body."
+        }`,
       };
     }
 
     const payload: unknown = await response.json();
+    if (DEBUG) console.log("[avinode] response", JSON.stringify(payload).slice(0, 8000));
+
     const lifts = firstArray(
       payload,
       "data.lifts",
