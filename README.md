@@ -79,7 +79,21 @@ business-to-end-client integrations, which is exactly what this page is. If the 
 rejects the call with an authorization error even though the tokens are right, check that
 the token is provisioned for an end-client application rather than a B2B one.
 
-### Is it actually working? — `/api/avinode/health`
+### Is it actually working? — `npm run avinode:check`
+
+The fastest check, needing no dev server and no deployment:
+
+```bash
+npm run avinode:check
+```
+
+It reads `.env.local`, makes one real `POST /searches`, and prints the HTTP status
+and response body. Token values are never printed — only whether they were found and
+how long they are. It distinguishes the three failure modes that look alike: missing
+credentials, a network/proxy block (the request never left your network), and Avinode
+itself refusing or rejecting the call.
+
+### The same check from the running app — `/api/avinode/health`
 
 Set `AVINODE_DEBUG=1` and open `/api/avinode/health`. It performs one real search
 against Avinode and reports the unvarnished result as JSON: which credentials the
