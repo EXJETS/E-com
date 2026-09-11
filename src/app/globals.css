@@ -13,6 +13,10 @@
   --jet-gold:        #C9A961;
   --jet-gold-bright: #E3C888;
   --jet-gold-wash:   rgba(201, 169, 97, 0.10);
+
+  /* Strong ease-out for entering elements; CSS's built-in `ease` carries an
+     ease-in phase, which delays the moment the eye is actually watching. */
+  --ease-out:        cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @theme inline {
@@ -23,7 +27,9 @@
 }
 
 /* ── Base ───────────────────────────────────────────────────────────── */
-html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
 
 body {
   min-height: 100vh;
@@ -134,7 +140,9 @@ input[type="time"] { color-scheme: dark; }
   border-radius: 8px;
   transition: filter 0.15s, transform 0.15s;
 }
-.jet-cta:hover:not(:disabled)  { filter: brightness(1.07); }
+@media (hover: hover) and (pointer: fine) {
+  .jet-cta:hover:not(:disabled) { filter: brightness(1.07); }
+}
 .jet-cta:active:not(:disabled) { transform: translateY(1px); }
 .jet-cta:disabled { opacity: 0.65; cursor: progress; }
 
@@ -145,9 +153,11 @@ input[type="time"] { color-scheme: dark; }
   border-radius: 12px;
   transition: border-color 0.2s, transform 0.2s;
 }
-.jet-card:hover {
-  border-color: var(--jet-line);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .jet-card:hover {
+    border-color: var(--jet-line);
+    transform: translateY(-2px);
+  }
 }
 
 .jet-chip {
@@ -164,9 +174,15 @@ input[type="time"] { color-scheme: dark; }
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.jet-fade-up { animation: jetFadeUp 0.5s ease both; }
+.jet-fade-up { animation: jetFadeUp 240ms var(--ease-out) both; }
+
+@keyframes jetFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .jet-fade-up { animation: none; }
+  /* Gentler, not zero: the fade still signals arrival, the travel is dropped. */
+  .jet-fade-up { animation: jetFade 200ms ease both; }
   .jet-card:hover { transform: none; }
 }
