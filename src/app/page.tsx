@@ -2,7 +2,10 @@ import { Suspense } from "react";
 import { Search, ShieldCheck, PlaneTakeoff, Headset, Globe2 } from "lucide-react";
 import type { TripSearchInput } from "@/lib/avinode";
 import SearchForm, { type SearchDefaults } from "@/components/SearchForm";
-import AvinodeWebApp, { isWebAppConfigured } from "@/components/AvinodeWebApp";
+import AvinodeWebApp, {
+  isWebAppConfigured,
+  WebAppNotConfiguredNotice,
+} from "@/components/AvinodeWebApp";
 import QuoteResults, { QuoteResultsSkeleton } from "@/components/QuoteResults";
 
 type PageSearchParams = { [key: string]: string | string[] | undefined };
@@ -111,6 +114,7 @@ export default async function CharterLandingPage({
                 experience — form, results and lead capture — so the local form
                 and the Marketplace-API results below stand down. */}
             {useWebApp ? <AvinodeWebApp /> : <SearchForm defaults={defaults} />}
+            <WebAppNotConfiguredNotice />
           </div>
         </div>
       </section>
