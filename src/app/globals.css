@@ -1,0 +1,243 @@
+@import "tailwindcss";
+
+/* ── Design tokens ─────────────────────────────────────────────────── */
+:root {
+  --jet-ink:         #080D16;
+  --jet-surface:     #0E1626;
+  --jet-elevated:    #16223A;
+  --jet-line:        rgba(201, 169, 97, 0.16);
+  --jet-line-soft:   rgba(233, 237, 245, 0.09);
+  --jet-text:        #ECF0F7;
+  --jet-muted:       #93A1B8;
+  --jet-dim:         #63708A;
+  --jet-gold:        #C9A961;
+  --jet-gold-bright: #E3C888;
+  --jet-gold-wash:   rgba(201, 169, 97, 0.10);
+
+  /* Strong ease-out for entering elements; CSS's built-in `ease` carries an
+     ease-in phase, which delays the moment the eye is actually watching. */
+  --ease-out:        cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@theme inline {
+  --color-background: var(--jet-ink);
+  --color-foreground: var(--jet-text);
+  --font-sans:    var(--font-geist-sans);
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+}
+
+/* ── Base ───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--jet-ink);
+  color: var(--jet-text);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--jet-gold);
+  color: var(--jet-ink);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--jet-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────── */
+::-webkit-scrollbar         { width: 5px; height: 5px; }
+::-webkit-scrollbar-track   { background: var(--jet-surface); }
+::-webkit-scrollbar-thumb   { background: var(--jet-elevated); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--jet-gold); }
+
+/* ── Typography ─────────────────────────────────────────────────────── */
+.jet-eyebrow {
+  /* rem, not px, so it scales with the reader's text-size setting */
+  font-size: 0.625rem;
+  font-weight: 600;
+  /* Small text wants positive tracking to stay legible. */
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--jet-gold);
+}
+
+/*
+ * One heading class spans 18px card titles to a 68px hero, so a single
+ * letter-spacing and line-height would be wrong at one end or the other.
+ * Both are expressed as size-derived curves instead:
+ *
+ *   tracking  calc(0.4px - 0.024em)  ~0 at 18px, about -0.018em at 68px —
+ *             letters read too far apart as type grows, so it tightens.
+ *   leading   calc(1em + 0.3rem)     ~1.27 at 18px, ~1.07 at 68px — leading
+ *             tracks size inversely; large text needs proportionally less.
+ */
+.jet-heading {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: calc(0.4px - 0.024em);
+  line-height: calc(1em + 0.3rem);
+  font-optical-sizing: auto;
+  text-wrap: balance;
+}
+
+/* Hairline rule that fades out at both ends */
+.jet-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--jet-line-soft) 15%,
+    var(--jet-line-soft) 85%,
+    transparent
+  );
+}
+
+/* ── Backdrops ──────────────────────────────────────────────────────── */
+/* Horizon glow behind the hero */
+.jet-horizon {
+  background:
+    radial-gradient(ellipse 80% 52% at 50% 0%, rgba(201, 169, 97, 0.13), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 30%, rgba(56, 102, 170, 0.16), transparent 70%);
+}
+
+/* Faint grid, like a navigation chart */
+.jet-grid {
+  background-image:
+    linear-gradient(rgba(233, 237, 245, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(233, 237, 245, 0.045) 1px, transparent 1px);
+  background-size: 68px 68px;
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 35%, #000 25%, transparent 78%);
+}
+
+/* ── Form controls ──────────────────────────────────────────────────── */
+.jet-field {
+  width: 100%;
+  background: rgba(8, 13, 22, 0.6);
+  border: 1px solid var(--jet-line-soft);
+  border-radius: 8px;
+  padding: 11px 13px;
+  font-size: 14px;
+  color: var(--jet-text);
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.jet-field::placeholder { color: var(--jet-dim); }
+.jet-field:hover  { border-color: rgba(201, 169, 97, 0.3); }
+.jet-field:focus  { border-color: var(--jet-gold); background: rgba(8, 13, 22, 0.9); }
+
+/* Dark-scheme calendar/clock pickers */
+input[type="date"],
+input[type="time"] { color-scheme: dark; }
+
+.jet-label {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--jet-muted);
+  margin-bottom: 7px;
+}
+
+.jet-cta {
+  background: linear-gradient(180deg, var(--jet-gold-bright), var(--jet-gold));
+  color: #17120A;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: filter 0.15s, transform 100ms ease-out;
+}
+@media (hover: hover) and (pointer: fine) {
+  .jet-cta:hover:not(:disabled) { filter: brightness(1.07); }
+}
+.jet-cta:active:not(:disabled) { transform: scale(0.97); }
+.jet-cta:disabled { opacity: 0.65; cursor: progress; }
+
+/* ── Surfaces ───────────────────────────────────────────────────────── */
+.jet-card {
+  background: linear-gradient(180deg, var(--jet-elevated), var(--jet-surface));
+  border: 1px solid var(--jet-line-soft);
+  border-radius: 12px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+@media (hover: hover) and (pointer: fine) {
+  .jet-card:hover {
+    border-color: var(--jet-line);
+    transform: translateY(-2px);
+  }
+}
+
+.jet-chip {
+  font-size: 11px;
+  color: var(--jet-muted);
+  border: 1px solid var(--jet-line-soft);
+  border-radius: 99px;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+
+/* ── Animation ──────────────────────────────────────────────────────── */
+@keyframes jetFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.jet-fade-up { animation: jetFadeUp 240ms var(--ease-out) both; }
+
+@keyframes jetFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Gentler, not zero: the fade still signals arrival, the travel is dropped. */
+  .jet-fade-up { animation: jetFade 200ms ease both; }
+  .jet-card:hover { transform: none; }
+}
+
+/* ── Material preferences ───────────────────────────────────────────────
+   Translucency is a preference, not a given: when it is turned down the
+   chrome becomes solid rather than merely less blurred, and under increased
+   contrast the hairlines become real borders. */
+@media (prefers-reduced-transparency: reduce) {
+  .jet-chrome {
+    background: var(--jet-ink);
+    backdrop-filter: none;
+  }
+  .jet-chrome::after { display: none; }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --jet-line:      rgba(201, 169, 97, 0.55);
+    --jet-line-soft: rgba(233, 237, 245, 0.4);
+    --jet-muted:     #C2CCDC;
+    --jet-dim:       #9AA7BC;
+  }
+  .jet-chrome {
+    background: var(--jet-ink);
+    backdrop-filter: none;
+  }
+}
+
+/* ── Scroll edge ────────────────────────────────────────────────────────
+   Floating chrome meets content with a short fade rather than a 1px rule —
+   the content reads as passing under a material instead of being cut by a
+   line. */
+.jet-chrome {
+  position: relative;
+}
+.jet-chrome::after {
+  content: "";
+  position: absolute;
+  inset: 100% 0 auto 0;
+  height: 24px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(8, 13, 22, 0.55), transparent);
+}
