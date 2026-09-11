@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { Search, ShieldCheck, PlaneTakeoff, Headset, Globe2 } from "lucide-react";
 import type { TripSearchInput } from "@/lib/avinode";
 import SearchForm, { type SearchDefaults } from "@/components/SearchForm";
+import AvinodeWebApp, { isWebAppConfigured } from "@/components/AvinodeWebApp";
 import QuoteResults, { QuoteResultsSkeleton } from "@/components/QuoteResults";
 
 type PageSearchParams = { [key: string]: string | string[] | undefined };
@@ -62,7 +63,8 @@ export default async function CharterLandingPage({
     trip,
   };
 
-  const hasSearched = first(params.searched) === "1";
+  const useWebApp = isWebAppConfigured();
+  const hasSearched = !useWebApp && first(params.searched) === "1";
   const search: TripSearchInput = {
     from: defaults.from,
     to: defaults.to,
@@ -104,8 +106,11 @@ export default async function CharterLandingPage({
             ))}
           </dl>
 
-          <div className="mt-11">
-            <SearchForm defaults={defaults} />
+          <div className="mt-11" id="search">
+            {/* When an Avinode Web App is configured it owns the whole search
+                experience — form, results and lead capture — so the local form
+                and the Marketplace-API results below stand down. */}
+            {useWebApp ? <AvinodeWebApp /> : <SearchForm defaults={defaults} />}
           </div>
         </div>
       </section>
