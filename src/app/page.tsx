@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { Search, ShieldCheck, PlaneTakeoff, Headset, Globe2 } from "lucide-react";
 import type { TripSearchInput } from "@/lib/avinode";
-import SearchForm, { type SearchDefaults } from "./SearchForm";
-import QuoteResults, { QuoteResultsSkeleton } from "./QuoteResults";
+import SearchForm, { type SearchDefaults } from "@/components/SearchForm";
+import QuoteResults, { QuoteResultsSkeleton } from "@/components/QuoteResults";
 
 type PageSearchParams = { [key: string]: string | string[] | undefined };
 

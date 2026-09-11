@@ -1,10 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  images: {
-    remotePatterns: [
-      { protocol: "https", hostname: "images.unsplash.com" },
-    ],
+  async redirects() {
+    // The charter page used to live at /charter before it became the site root.
+    return [{ source: "/charter", destination: "/", permanent: true }];
   },
 };
 

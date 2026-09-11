@@ -22,20 +22,21 @@ export default function SearchForm({ defaults }: { defaults: SearchDefaults }) {
     setValues((current) => ({ ...current, [field]: value }));
   }
 
-  // The form also works without JavaScript — this handler only adds the
-  // pending state and the jump down to the results.
+  // A plain GET keeps every search linkable and the back button honest; this
+  // handler only adds the pending state and the jump down to the results.
+  // (The results themselves stream in behind Suspense, so they do need JS.)
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const query = new URLSearchParams({ ...values, searched: "1" });
     startTransition(() => {
-      router.push(`/charter?${query.toString()}#quotes`);
+      router.push(`/?${query.toString()}#quotes`);
     });
   }
 
   return (
     <form
       id="search"
-      action="/charter"
+      action="/"
       method="get"
       onSubmit={onSubmit}
       className="jet-card scroll-mt-24 p-5 sm:p-6"
