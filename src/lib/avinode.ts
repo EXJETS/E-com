@@ -25,6 +25,8 @@ export type TripSearchInput = {
   date: string;
   time: string;
   pax: number;
+  /** Set for a round trip; adds a second, reversed segment to the search. */
+  returnDate?: string;
 };
 
 export type CharterQuote = {
@@ -239,21 +241,30 @@ export async function searchCharterQuotes(input: TripSearchInput): Promise<Quote
     };
   }
 
-  const requestBody = {
-    segments: [
-      {
-        startAirport: { icao: from?.icao ?? input.from.toUpperCase() },
-        endAirport: { icao: to?.icao ?? input.to.toUpperCase() },
-        dateTime: {
-          date: input.date,
-          time: input.time,
-          departure: true,
-          local: true,
-        },
-        paxCount: input.pax,
-      },
-    ],
-  };
+  const startIcao = from?.icao ?? input.from.toUpperCase();
+  const endIcao = to?.icao ?? input.to.toUpperCase();
+
+  // Avinode takes an array of segments, so a round trip is the outbound plus a
+  // reversed leg on the return date — not a separate request.
+  const segments = [
+    {
+      startAirport: { icao: startIcao },
+      endAirport: { icao: endIcao },
+      dateTime: { date: input.date, time: input.time, departure: true, local: true },
+      paxCount: input.pax,
+    },
+  ];
+
+  if (input.returnDate) {
+    segments.push({
+      startAirport: { icao: endIcao },
+      endAirport: { icao: startIcao },
+      dateTime: { date: input.returnDate, time: input.time, departure: true, local: true },
+      paxCount: input.pax,
+    });
+  }
+
+  const requestBody = { segments };
 
   // Never log headers() — it carries both tokens.
   if (DEBUG) console.log("[avinode] POST /searches", JSON.stringify(requestBody));

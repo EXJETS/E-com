@@ -10,9 +10,9 @@ function first(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }
 
-function defaultDate(): string {
+function defaultDate(daysAhead = 7): string {
   const date = new Date();
-  date.setDate(date.getDate() + 7);
+  date.setDate(date.getDate() + daysAhead);
   return date.toISOString().slice(0, 10);
 }
 
@@ -50,12 +50,16 @@ export default async function CharterLandingPage({
 }) {
   const params = await searchParams;
 
+  const trip = first(params.trip) === "roundtrip" ? "roundtrip" : "oneway";
+
   const defaults: SearchDefaults = {
     from: first(params.from) ?? "LTN",
     to: first(params.to) ?? "NCE",
     date: first(params.date) ?? defaultDate(),
     time: first(params.time) ?? "10:00",
     pax: first(params.pax) ?? "4",
+    returnDate: first(params.returnDate) ?? defaultDate(14),
+    trip,
   };
 
   const hasSearched = first(params.searched) === "1";
@@ -64,7 +68,8 @@ export default async function CharterLandingPage({
     to: defaults.to,
     date: defaults.date,
     time: defaults.time,
-    pax: Math.min(Math.max(Number(defaults.pax) || 1, 1), 16),
+    pax: Math.min(Math.max(Number(defaults.pax) || 1, 1), 19),
+    returnDate: trip === "roundtrip" ? defaults.returnDate : undefined,
   };
 
   return (
@@ -110,7 +115,7 @@ export default async function CharterLandingPage({
         <section id="quotes" className="scroll-mt-20 border-t border-[var(--jet-line-soft)]">
           <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
             <Suspense
-              key={`${search.from}-${search.to}-${search.date}-${search.time}-${search.pax}`}
+              key={`${search.from}-${search.to}-${search.date}-${search.time}-${search.pax}-${search.returnDate ?? "ow"}`}
               fallback={<QuoteResultsSkeleton />}
             >
               <QuoteResults search={search} />

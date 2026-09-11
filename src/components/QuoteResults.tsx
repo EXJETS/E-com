@@ -127,6 +127,7 @@ export default async function QuoteResults({ search }: { search: TripSearchInput
             {from?.name ?? search.from} to {to?.name ?? search.to}
             {legNm ? ` · ${legNm.toLocaleString("en-GB")} nm` : ""} · {search.pax}{" "}
             {search.pax === 1 ? "guest" : "guests"} · {search.date} at {search.time}
+            {search.returnDate ? ` · returning ${search.returnDate}` : ""}
           </p>
         </div>
 
